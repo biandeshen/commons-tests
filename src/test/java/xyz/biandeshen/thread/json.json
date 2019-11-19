@@ -1,0 +1,284 @@
+[
+  {
+    "clientFlag": "Zara",
+    "mailNo": "A007285337931",
+    "orderNo": "222807455917",
+    "busType": "1",
+    "dataFlag": "BERSHKA",
+    "serviceAgent": "BK-EWMS-CNSH",
+    "goodsName": "服饰",
+    "goodsNum": "1",
+    "goodsVolume": "64*44*1",
+    "receiveName": "-周弦",
+    "receiveMobile": "13811695456",
+    "receivePro": "北京",
+    "receiveCity": "北京市",
+    "receiveDistrict": "海淀区",
+    "receiveAddress": "清河街道总参毛纺路58号院小米总参",
+    "extendedInfo": {
+      "memo": "TMALL |品牌: BERSHKA|快递运输类型: 急速达"
+    },
+    "remarks": "务必本人签收，派送前电联，异常请联系021-37566057,| 顾客订单号：1303413032",
+    "orderPackages": [
+      {
+        "packageNo": "22280745591700100038",
+        "packageWeight": "13.04",
+        "packageVolume": "64*44*1",
+        "item": [
+          {
+            "itemNo": "0090811150001",
+            "itemName": "Bershka + PANTONE 系列衬衫",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0038019062902",
+            "itemName": "系结小圆点印花连衣裙",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0115416867502",
+            "itemName": "霓虹色短版西装外套",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0115311169303",
+            "itemName": "Bershka + PANTONE 系列西装外套",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0408102363803",
+            "itemName": "珊瑚耳坠",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0181811132210",
+            "itemName": "Bershka + PANTONE 系列运动衫",
+            "itemNumber": "3",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "1138503109039",
+            "itemName": "霓虹色袜型运动短靴",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "1103003100139",
+            "itemName": "镂空设计厚底运动鞋",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0140321143304",
+            "itemName": "背面印花牛仔外套",
+            "itemNumber": "2",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0440030532204",
+            "itemName": "短版泳裤",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0084953442832",
+            "itemName": "高腰牛仔裙",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0266211161702",
+            "itemName": "Bershka + PANTONE 系列五分紧身裤",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0280517943342",
+            "itemName": "剪洞紧身牛仔短裤",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0281548880004",
+            "itemName": "运动风短裤",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0222211161701",
+            "itemName": "Bershka + PANTONE 系列镂空背心",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0889859232201",
+            "itemName": "头巾式上衣",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0213713025004",
+            "itemName": "霓虹色印花运动衫",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0110864798205",
+            "itemName": "飘逸短袖衬衫",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0181811167510",
+            "itemName": "Bershka + PANTONE 系列运动衫",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0014333543334",
+            "itemName": "中腰及踝直筒牛仔裤",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0007111161736",
+            "itemName": "Bershka + PANTONE 系列慢跑长裤",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0129353432002",
+            "itemName": "短版牛仔外套",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0400759771203",
+            "itemName": "霓虹色大型耳环",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0400802352003",
+            "itemName": "霓虹色大耳环",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0402791752003",
+            "itemName": "霓虹色头巾",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0348558861703",
+            "itemName": "两双装霓虹色中筒袜",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0889859263102",
+            "itemName": "头巾式上衣",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0217123167502",
+            "itemName": "绕颈吊带连体衣",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0309488061105",
+            "itemName": "极宽松版T恤",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0132755167502",
+            "itemName": "尼龙连帽夹克",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0115416851302",
+            "itemName": "霓虹色短版西装外套",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0401402350903",
+            "itemName": "霓虹色大型耳坠组合",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0401502361703",
+            "itemName": "两对装环形耳环",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0341532625002",
+            "itemName": "配拉链科技布料上衣",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0300146132704",
+            "itemName": "Tokyo 印字霓虹色T恤",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0746425663101",
+            "itemName": "高领连体衣",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0274644380002",
+            "itemName": "短版紧身裤",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0746419061702",
+            "itemName": "高领连体衣",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0889859263101",
+            "itemName": "头巾式上衣",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0221431532202",
+            "itemName": "斜肩上衣",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0746459252002",
+            "itemName": "高领连体衣",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          },
+          {
+            "itemNo": "0285911166302",
+            "itemName": "Bershka + PANTONE 系列连身长裤",
+            "itemNumber": "1",
+            "itemValue": "0.0"
+          }
+        ]
+      }
+    ]
+  }
+]
