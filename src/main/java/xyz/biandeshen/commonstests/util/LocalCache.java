@@ -1,9 +1,6 @@
 package xyz.biandeshen.commonstests.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Objects;
 import java.util.concurrent.*;
@@ -21,34 +18,126 @@ public class LocalCache {
 	/**
 	 * 缓存最大个数
 	 */
-	private final Integer CACHE_MAX_NUMBER = 2 << 31;
+	private final Integer CACHE_MAX_SIZE;
 	/**
 	 * 过期队列大小
 	 */
-	private Integer CURRENT_SIZE = CACHE_MAX_NUMBER + 1;
+	private final Integer EXPIRED_QUEUE_SIZE;
 	/**
 	 * 过期时间,默认一分钟
 	 */
-	private Long EXPIRATION_TIME = TimeUnit.MINUTES.toMillis(1);
+	private final Long EXPIRATION_TIME;
 	
 	/**
-	 * 缓存大小
+	 * 过期管理线程池
 	 */
-	private ConcurrentMap<String, Node> cache = new ConcurrentHashMap<>(CACHE_MAX_NUMBER);
+	private final CacheAndExpirationQueueManagementThreadPool cacheAndExpirationQueueManagementThreadPool;
 	/**
-	 * 到期队列大小
+	 * 缓存
 	 */
-	private PriorityBlockingQueue<Node> expireQueue = new PriorityBlockingQueue<>(CURRENT_SIZE);
-	
+	private final ConcurrentMap<String, Node> cache;
+	/**
+	 * 到期队列
+	 */
+	private final PriorityBlockingQueue<Node> expireQueue;
 	/**
 	 * 锁
 	 */
-	private ReentrantLock reentrantLock = new ReentrantLock();
+	private final ReentrantLock reentrantLock;
 	
-	public LocalCache() {
-		Runnable cacheCleaner = new SwapExpiredNodeWork();
+	
+	private LocalCache(Builder builder) {
+		//缓存及队列等参数赋值
+		this.CACHE_MAX_SIZE = builder.CACHE_MAX_SIZE;
+		this.EXPIRED_QUEUE_SIZE = builder.EXPIRED_QUEUE_SIZE;
+		this.EXPIRATION_TIME = builder.EXPIRATION_TIME;
+		//缓存及过期队列初始化
+		cache = new ConcurrentHashMap<>(CACHE_MAX_SIZE);
+		expireQueue = new PriorityBlockingQueue<>(EXPIRED_QUEUE_SIZE);
+		reentrantLock = new ReentrantLock();
+		
+		//创建缓存及过期队列管理线程池
+		this.cacheAndExpirationQueueManagementThreadPool =
+				builder.cacheAndExpirationQueueManagementThreadPool;
+	}
+	
+	/**
+	 * 执行清理线程
+	 */
+	public void scheduleAtFixedRate() {
+		//清理线程
+		CleanExpiredNodeWorker cacheCleaner = new CleanExpiredNodeWorker();
 		//执行定时清理任务
-		new CacheAndExpirationQueueManagementThreadPool.Builder().build().scheduleAtFixedRate(cacheCleaner);
+		cacheAndExpirationQueueManagementThreadPool.scheduleAtFixedRate(cacheCleaner);
+	}
+	
+	static class Builder {
+		/**
+		 * 缓存最大个数
+		 */
+		private Integer CACHE_MAX_SIZE = 2 << 10;
+		/**
+		 * 过期队列大小
+		 */
+		private Integer EXPIRED_QUEUE_SIZE = 2 << 10;
+		/**
+		 * 过期时间,默认一分钟
+		 */
+		private Long EXPIRATION_TIME = TimeUnit.MINUTES.toMillis(1);
+		/**
+		 * 过期管理线程池
+		 */
+		private CacheAndExpirationQueueManagementThreadPool cacheAndExpirationQueueManagementThreadPool =
+				new CacheAndExpirationQueueManagementThreadPool.Builder().build();
+		
+		public Builder() {
+		
+		}
+		
+		/**
+		 * LocalCache参数设置
+		 *
+		 * @param cacheMaxSize
+		 * 		缓存大小
+		 * @param expiredQueueSize
+		 * 		过期队列大小
+		 * @param expriationTime
+		 * 		过期时间(即保存缓存时长)
+		 * @param threadPool
+		 * 		过期管理线程池
+		 */
+		public Builder(Integer cacheMaxSize, Integer expiredQueueSize, Long expriationTime,
+		               CacheAndExpirationQueueManagementThreadPool threadPool) {
+			this.CACHE_MAX_SIZE = cacheMaxSize;
+			this.EXPIRED_QUEUE_SIZE = expiredQueueSize;
+			this.EXPIRATION_TIME = expriationTime;
+			this.cacheAndExpirationQueueManagementThreadPool = threadPool;
+		}
+		
+		public Builder cacheMaxSize(Integer cacheMaxSize) {
+			this.CACHE_MAX_SIZE = cacheMaxSize;
+			return this;
+		}
+		
+		public Builder expiredQueueSize(Integer expiredQueueSize) {
+			this.EXPIRED_QUEUE_SIZE = expiredQueueSize;
+			return this;
+		}
+		
+		public Builder expriationTime(Long expriationTime) {
+			this.EXPIRATION_TIME = expriationTime;
+			return this;
+		}
+		
+		public Builder threadPool(CacheAndExpirationQueueManagementThreadPool threadPool) {
+			this.cacheAndExpirationQueueManagementThreadPool = threadPool;
+			return this;
+		}
+		
+		public LocalCache build() {
+			return new LocalCache(this);
+		}
+		
 	}
 	
 	/**
@@ -197,6 +286,20 @@ public class LocalCache {
 			 */
 			private boolean THREAD_DEAMON = true;
 			
+			/**
+			 * 缓存清理线程池参数设置
+			 *
+			 * @param threadPoolName
+			 * 		线程池名
+			 * @param threadPoolCoreSize
+			 * 		线程池大小
+			 * @param threadRateTime
+			 * 		缓存清理线程池初始延迟时间（默认一分钟）
+			 * @param threadPeriodTime
+			 * 		每隔period的时长再次执行该任务（默认一分钟）
+			 * @param deamon
+			 * 		清理线程是否设置为守护线程（默认为true）
+			 */
 			public Builder(String threadPoolName, int threadPoolCoreSize, Long threadRateTime,
 			               Long threadPeriodTime, boolean deamon) {
 				this.THREAD_POOL_NAME = threadPoolName;
@@ -241,9 +344,9 @@ public class LocalCache {
 	}
 	
 	/**
-	 * 删除已过期的数据
+	 * 删除已过期的数据(默认实现)
 	 */
-	class SwapExpiredNodeWork implements Runnable {
+	private class CleanExpiredNodeWorker implements Runnable {
 		@Override
 		public void run() {
 			long now = System.currentTimeMillis();
@@ -259,7 +362,6 @@ public class LocalCache {
 					//	否则,移除
 					cache.remove(node.key);
 					expireQueue.poll();
-					System.err.println(Thread.currentThread().getName() + "缓存清理!" + node.key);
 				} finally {
 					reentrantLock.unlock();
 				}
@@ -271,7 +373,7 @@ public class LocalCache {
 	/**
 	 * 数据存储节点
 	 */
-	static class Node implements Comparable<Node> {
+	private static class Node implements Comparable<Node> {
 		// key
 		private final String key;
 		// value
@@ -337,35 +439,4 @@ public class LocalCache {
 	//		return res;
 	//	}
 	//}
-	
-	public static void main(String[] args) {
-		Logger logger = LoggerFactory.getLogger(LocalCache.class);
-		ExecutorService executorService = Executors.newFixedThreadPool(10);
-		LocalCache localCache = new LocalCache();
-		localCache.EXPIRATION_TIME = TimeUnit.SECONDS.toMillis(60);
-		executorService.execute(() -> {
-			for (int i = 0; i < 1000000; i++) {
-				Object set = localCache.set(String.valueOf(i), RandomStringUtils.random(10));
-				logger.info("{} {}", Thread.currentThread().getName(), set);
-			}
-		});
-		try {
-			TimeUnit.SECONDS.sleep(5);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		executorService.execute(() -> {
-			for (int i = 0; i < 1000000; i++) {
-				Object key = localCache.get(String.valueOf(i));
-				logger.error("{} {}", Thread.currentThread().getName(), key);
-			}
-		});
-		executorService.execute(() -> {
-			for (int i = 0; i < 1000000; i++) {
-				Object key = localCache.get(String.valueOf(i));
-				logger.warn("{} {}", Thread.currentThread().getName(), key);
-			}
-		});
-		executorService.shutdownNow();
-	}
 }
