@@ -2,10 +2,7 @@ package xyz.biandeshen.collections;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 
@@ -18,7 +15,7 @@ import java.util.function.Consumer;
  */
 public class TestMap {
 	/**
-	 *ddd
+	 * ddd
 	 */
 	/*dasdfa*/
 	@Test
@@ -55,6 +52,10 @@ public class TestMap {
 		HashSet<String> staff = new HashSet<>(Arrays.asList(values));
 		String[] strings = staff.toArray(new String[0]);
 		
+		Collection<String> values1 = map.values();
+		List<Object> objects = new ArrayList<>(values1);
+		
+		System.out.println("objects.get(0) = " + objects.get(0));
 	}
 	
 	@Test

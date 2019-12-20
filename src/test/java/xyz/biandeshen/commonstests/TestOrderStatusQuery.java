@@ -19,28 +19,31 @@ public class TestOrderStatusQuery {
 	public void t1() throws UnsupportedEncodingException {
 		//String url="http://10.10.12.132:8110/querystatus";
 		//String url = "http://businesstest.zjs.com.cn:9200/interface/iwc/querystatustest";
-		//String url = "http://businesstest.zjs.com.cn:9200/interface/iwc/nctfendantest";
-		String url = "http://cntm.zjs.com.cn/interface/iwc/nctfendan";
+		String url = "http://businesstest.zjs.com.cn:9200/interface/iwc/nctfendantest";
+		//String url = "http://cntm.zjs.com.cn/interface/iwc/nctfendan";
 		//String url="http://cntm.zjs.com.cn/interface/iwc/querystatus";
 		//String data="{\"clientFlag\": \"客户标识\",\"orders\": [{\"mailNo\": \"A602912931905\"}]}";
 		//String data = "{\"clientFlag\": \"test\",\"orders\": [{\"mailNo\": \"A602908107966\"}]}";
-		String data = "[{\"orderNo\":\"121508\",\"address\":\" 黑龙江省鹤岗市向阳区二马路\\龙江省煤营销分公司鹤岗公司 }]";
-		//String data = "[{\"orderNo\":\"DH322019041817021620271\",\"address\":\"\n" + "\n" + "四川省成都市都江堰市幸福大道莲花南路都江明珠\n\"}]";
+		//String data = "[{\"orderNo\":\"121508\",\"address\":\" 黑龙江省鹤岗市向阳区二马路\\龙江省煤营销分公司鹤岗公司 }]";
+		String data = "[{\"orderNo\":\"DH322019041817021620271\",\"address\":" + "四川省成都市都江堰市幸福大道莲花南路都江明珠}]";
 		//String data="{\"clientFlag\": \"DianXin_HN\",\"orders\": [{\"mailNo\": \"A005548987905\"}]}";
 		
-		//data="{\"clientFlag\": \"客户标识\",\"orders\": [{\"mailNo\": \"A001417704024\"},{\"mailNo\": \"A602914589233\"},{\"mailNo\": \"A001417630620\"},{\"mailNo\": \"A001417650253\"},{\"mailNo\": \"A001417660753\"}]}";
+		//data="{\"clientFlag\": \"客户标识\",\"orders\": [{\"mailNo\": \"A001417704024\"},{\"mailNo\":
+		// \"A602914589233\"},{\"mailNo\": \"A001417630620\"},{\"mailNo\": \"A001417650253\"},{\"mailNo\":
+		// \"A001417660753\"}]}";
 		System.out.println("data = " + data);
 		String verifyData = GetVerifyDataByrdm(data, "1111", "1111", "test", "aafc04a1bacb487fa8d03f2a7bfdb555");
 		System.out.println("verifyData = " + verifyData);
 		String str = "";
 		System.out.println(verifyData);
-		data = URLEncoder.encode(data,"UTF-8");
+		data = URLEncoder.encode(data, "UTF-8");
 		long st = System.currentTimeMillis();
 		try {
 			str = sendPost(url, "data=" + data + "&clientFlag=test&verifyData=" + verifyData);
 			
 			//生成verifyData的规则:
-			// 1. 拼接: 四位随机数 + 客户标识(测试: test) + 报文( {"clientFlag": "test","orders": [{"mailNo": "A602908107966"}]} ) + 密钥(测试密钥: aafc04a1bacb487fa8d03f2a7bfdb555) + 常量值(z宅J急S送g) +四位随机数
+			// 1. 拼接: 四位随机数 + 客户标识(测试: test) + 报文( {"clientFlag": "test","orders": [{"mailNo": "A602908107966"}]} ) +
+			// 密钥(测试密钥: aafc04a1bacb487fa8d03f2a7bfdb555) + 常量值(z宅J急S送g) +四位随机数
 			// 2. md5加密上面拼接的字符串,获取 长度 32位 的 校验码
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -65,7 +68,8 @@ public class TestOrderStatusQuery {
 	@Test
 	public void t2() {
 		//生成verifyData的规则:
-		// 1. 拼接: 四位随机数 + 客户标识(测试: test) + 报文( {"clientFlag": "test","orders": [{"mailNo": "A602908107966"}]} ) + 密钥(测试密钥: aafc04a1bacb487fa8d03f2a7bfdb555) + 常量值(z宅J急S送g) +四位随机数
+		// 1. 拼接: 四位随机数 + 客户标识(测试: test) + 报文( {"clientFlag": "test","orders": [{"mailNo": "A602908107966"}]} ) + 密钥
+		// (测试密钥: aafc04a1bacb487fa8d03f2a7bfdb555) + 常量值(z宅J急S送g) +四位随机数
 		// 2. md5加密上面拼接的字符串,获取 长度 32位 的 校验码
 		String url = "http://businesstest.zjs.com.cn:9200/interface/iwc/querystatustest";
 		String data = "{\"clientFlag\": \"test\",\"orders\": [{\"mailNo\": \"A602908107966\"}]}";
@@ -136,7 +140,8 @@ public class TestOrderStatusQuery {
 	}
 	
 	
-	public static String GetVerifyDataByrdm(String datajson, String rmd1, String rmd2, String clientFlag, String strSeed) {
+	public static String GetVerifyDataByrdm(String datajson, String rmd1, String rmd2, String clientFlag,
+	                                        String strSeed) {
 		
 		// 四位随机数 + 客户标识(测试为test) + 报文 + 密钥(测试密钥) + 常量值() +四位随机数
 		String str = rmd1 + clientFlag + datajson + strSeed + strConst + rmd2;

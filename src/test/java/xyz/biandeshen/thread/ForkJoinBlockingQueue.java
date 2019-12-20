@@ -13,48 +13,71 @@ import java.util.concurrent.*;
  * @author fjp
  * @Title: TestFileCrawler
  * @ProjectName commons-tests`
- * @Description: TODO
+ * @Description: 文件搜索
+ * todo 尝试 以 毒丸 及 CountDownLatch 或 semaphore 来终止线程的执行
+ * 跳出 where(true) 的循环
  * @date 2019/11/611:06
  */
 @SuppressWarnings("all")
 public class ForkJoinBlockingQueue {
+	//查询路径
+	private static File root = new File("E:\\");
+	// private File root2 = new File("D:\\");
+	// private File root3 = new File("C:\\");
+	
+	////查询规则
+	private static final FileFilter fileFilter = file -> {
+		if (file.isDirectory()) {
+			return true;
+		}
+		////查询规则
+		//return StringUtils.contains(file.getName(), ".pdf") &&
+		//		       StringUtils.contains(file.getName(), "并发");
+		//查询规则
+		return StringUtils.contains(file.getName().toLowerCase(), ".pdf");
+	};
+	
 	public static void main(String[] args) {
-		//查询路径
-		File root = new File("E:\\");
-		FileFilter fileFilter = file -> {
-			if (file.isDirectory()) {
-				return true;
-			}
-			//查询关键字
-			return StringUtils.contains(file.getName(), ".pdf") && StringUtils.contains(file.getName(), "并发");
-		};
 		File[] roots = new File[10];
 		roots[0] = root;
-		ProduceAndConsumer.startIndexing(roots, fileFilter);
+		//roots[1] = root2;
+		//roots[2] = root3;
+		
+		//开启索引
 		new Thread(() -> {
-			BlockingDeque<File> indexBlockingDeque = ProduceAndConsumer.getIndexBlockingDeque();
 			try {
-				while (true) {
-					File take = indexBlockingDeque.takeFirst();
-					System.out.println("查詢结果为 = " + take.getAbsolutePath());
-				}
+				ProduceAndConsumer.startIndexing(roots, fileFilter);
 			} catch (InterruptedException e) {
-				System.out.println("2 " + e);
-				try {
-					Thread.currentThread().wait(10);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
+				Thread.currentThread().interrupt();
 			}
 		}).start();
+		Thread thread = new Thread(() -> {
+			BlockingDeque<File> indexBlockingDeque = ProduceAndConsumer.getIndexBlockingDeque();
+			while (!Thread.currentThread().isInterrupted()) {
+				try {
+					File take = indexBlockingDeque.take();
+					if (take != null) {
+						System.out.println("查詢结果为 = " + take.getAbsolutePath());
+					}
+					if (take == null) {
+						throw new InterruptedException();
+					}
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			}
+			System.out.println("查詢结束!");
+		});
+		thread.setDaemon(true);
+		thread.start();
 	}
 }
 
 @SuppressWarnings("all")
-class TestFileCrawler extends RecursiveTask {
+class TestFileCrawler extends RecursiveAction {
 	private static final long serialVersionUID = 8921400203791115241L;
 	private final BlockingQueue<File> fileBlockingQueue;
-	private final FileFilter fileFilter;
+	private final transient FileFilter fileFilter;
 	private final File root;
 	
 	public TestFileCrawler(BlockingQueue<File> fileBlockingQueue, FileFilter fileFilter, File root) {
@@ -69,45 +92,48 @@ class TestFileCrawler extends RecursiveTask {
 	 * @return the result of the computation
 	 */
 	@Override
-	protected Object compute() {
+	public void compute() {
 		List<ForkJoinTask> folderProcessors = new ArrayList<>();
-		try {
-			
-			if (root.isDirectory()) {
-				File[] entries = root.listFiles(fileFilter);
-				if (entries != null) {
-					for (File entry : entries) {
-						if (entry.isDirectory()) {
-							//recursiveTask 方式
-							ForkJoinTask testFileCrawler = new TestFileCrawler(fileBlockingQueue, fileFilter, entry);
-							testFileCrawler.fork();
-							folderProcessors.add(testFileCrawler);
-						} else if (!alreadyIndexed(entry)) {
+		
+		if (root.isDirectory()) {
+			File[] entries = root.listFiles(fileFilter);
+			if (entries != null) {
+				for (File entry : entries) {
+					if (entry.isDirectory()) {
+						//recursiveTask 方式
+						ForkJoinTask testFileCrawler = new TestFileCrawler(fileBlockingQueue, fileFilter, entry);
+						testFileCrawler.fork();
+						folderProcessors.add(testFileCrawler);
+					} else if (!alreadyIndexed(entry)) {
+						try {
 							fileBlockingQueue.put(entry);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+							Thread.currentThread().interrupt();
 						}
 					}
 				}
 			}
-			
-			//recursiveTask
-			for (ForkJoinTask folderProcessor : folderProcessors) {
-				fileBlockingQueue.addAll((Collection<? extends File>) folderProcessor.join());
-			}
-			
-		} catch (Exception e) {
-			try {
-				Thread.currentThread().wait(10);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-				Thread.currentThread().interrupt();
-			}
 		}
-		return fileBlockingQueue;
+		//recursiveTask
+		for (ForkJoinTask folderProcessor : folderProcessors) {
+			fileBlockingQueue.addAll((Collection<? extends File>) folderProcessor.join());
+		}
 	}
 	
-	
+	/**
+	 * 是否已被索引 todo
+	 *
+	 * @param entry
+	 * 		文件实体
+	 *
+	 * @return 是否被索引
+	 */
 	private boolean alreadyIndexed(File entry) {
-		return fileBlockingQueue.contains(entry);
+		//return fileBlockingQueue.contains(entry);
+		//return false;
+		//索引队列中是否已经存在
+		return ProduceAndConsumer.getIndexBlockingDeque().contains(entry);
 	}
 }
 
@@ -121,44 +147,28 @@ class Indexer implements Runnable {
 		this.fileBlockingDeque = fileBlockingDeque;
 	}
 	
-	/**
-	 * When an object implementing interface <code>Runnable</code> is used
-	 * to create a thread, starting the thread causes the object's
-	 * <code>run</code> method to be called in that separately executing
-	 * thread.
-	 * <p>
-	 * The general contract of the method <code>run</code> is that it may
-	 * take any action whatsoever.
-	 *
-	 * @see Thread#run()
-	 */
 	@Override
 	public void run() {
-		try {
-			while (true) {
-				indexFile(fileBlockingQueue.take());
-			}
-		} catch (InterruptedException e) {
-			System.out.println("3 " + e);
+		while (!Thread.currentThread().isInterrupted()) {
 			try {
-				Thread.currentThread().wait(10);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
+				//File take = fileBlockingQueue.poll(10, TimeUnit.SECONDS);
+				File take = fileBlockingQueue.take();
+				indexFile(take);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
 			}
 		}
 		
 	}
 	
-	private void indexFile(File take) {
-		try {
-			//System.err.println("添加索引路径为: " + take.getAbsolutePath());
-			fileBlockingDeque.putLast(take);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+	private void indexFile(File take) throws InterruptedException {
+		if (take != null) {
+			fileBlockingDeque.put(take);
 		}
 	}
 }
 
+@SuppressWarnings("ALL")
 class ProduceAndConsumer {
 	private static final int N_CONSUMERS = Runtime.getRuntime().availableProcessors();
 	/**
@@ -166,17 +176,23 @@ class ProduceAndConsumer {
 	 */
 	private static final BlockingDeque<File> indexBlockingDeque = new LinkedBlockingDeque<>();
 	
-	static void startIndexing(File[] roots, FileFilter fileFilter) {
-		BlockingQueue<File> blockingQueue = new LinkedBlockingQueue<>();
+	//文件队列
+	private static final BlockingQueue<File> blockingQueue = new LinkedBlockingQueue<>();
+	
+	static void startIndexing(File[] roots, FileFilter fileFilter) throws InterruptedException {
 		FileFilter DefaultFileFilter = pathname -> false;
 		fileFilter = fileFilter == null ? DefaultFileFilter : fileFilter;
+		
+		ExecutorService executorService = Executors.newCachedThreadPool();
 		ForkJoinPool forkJoinPool = new ForkJoinPool(N_CONSUMERS - 1);
 		for (File root : roots) {
 			forkJoinPool.execute(new TestFileCrawler(blockingQueue, fileFilter, root));
 		}
-		for (int i = 0; i < forkJoinPool.getPoolSize(); i++) {
-			forkJoinPool.execute(new Indexer(blockingQueue, indexBlockingDeque));
-		}
+		Future<?> submit = executorService.submit(new Indexer(blockingQueue, indexBlockingDeque));
+		forkJoinPool.shutdown();
+		executorService.awaitTermination(10, TimeUnit.SECONDS);
+		submit.cancel(true);
+		executorService.shutdown();
 	}
 	
 	static BlockingDeque<File> getIndexBlockingDeque() {

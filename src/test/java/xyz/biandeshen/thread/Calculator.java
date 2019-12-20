@@ -11,7 +11,7 @@ import java.util.stream.LongStream;
  * @author fjp
  * @Title: TestCalculator
  * @ProjectName commons-tests
- * @Description: TODO
+ * @Description: 多种形式的累加性能比较 （串行、并行）
  * @date 2019/10/299:05
  */
 public interface Calculator {
@@ -45,7 +45,8 @@ public interface Calculator {
 			System.out.println("(end3-start3) = " + (end3 - start3));
 			System.out.println("l3 = " + l3);
 			
-			ForkJoinCalculator for4 = new ForkJoinCalculator(new ForkJoinPool(Runtime.getRuntime().availableProcessors() - 1));
+			ForkJoinCalculator for4 =
+					new ForkJoinCalculator(new ForkJoinPool(Runtime.getRuntime().availableProcessors() - 1));
 			long start4 = System.currentTimeMillis();
 			long l4 = for4.sumUp(numbers);
 			long end4 = System.currentTimeMillis();

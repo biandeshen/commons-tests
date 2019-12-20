@@ -36,6 +36,10 @@ public class TestPhaser {
 		}
 		
 		System.out.println("Terminated: " + phaser.isTerminated());
+		//System.out.println("phaser.getPhase() = " + phaser.getPhase());
+		//System.out.println("phaser.getArrivedParties() = " + phaser.getArrivedParties());
+		//System.out.println("phaser.getRegisteredParties() = " + phaser.getRegisteredParties());
+		//System.out.println("phaser.getUnarrivedParties() = " + phaser.getUnarrivedParties());
 	}
 }
 
@@ -56,17 +60,6 @@ class FileSearch implements Runnable {
 		this.resultList = new ArrayList<>();
 	}
 	
-	/**
-	 * When an object implementing interface <code>Runnable</code> is used
-	 * to create a thread, starting the thread causes the object's
-	 * <code>run</code> method to be called in that separately executing
-	 * thread.
-	 * <p>
-	 * The general contract of the method <code>run</code> is that it may
-	 * take any action whatsoever.
-	 *
-	 * @see Thread#run()
-	 */
 	@Override
 	public void run() {
 		// 放在此处,即表示到达并等待 在其它线程创建后同时执行,所有线程同时起步

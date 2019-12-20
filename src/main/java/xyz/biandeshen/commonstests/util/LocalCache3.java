@@ -18,7 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @date 2019/11/1816:24
  */
 @SuppressWarnings("all")
-public class LocalCache<K, V> {
+public class LocalCache3<K, V> {
 	/**
 	 * 缓存最大个数
 	 */
@@ -46,7 +46,7 @@ public class LocalCache<K, V> {
 	private final ReentrantLock reentrantLock;
 	
 	
-	private LocalCache(Builder builder) {
+	private LocalCache3(Builder builder) {
 		//缓存及队列等参数赋值
 		this.CACHE_MAX_SIZE = builder.CACHE_MAX_SIZE;
 		this.EXPIRATION_TIME = builder.EXPIRATION_TIME;
@@ -123,8 +123,8 @@ public class LocalCache<K, V> {
 			return this;
 		}
 		
-		public LocalCache build() {
-			return new LocalCache(this);
+		public LocalCache3 build() {
+			return new LocalCache3(this);
 		}
 		
 	}
@@ -146,17 +146,12 @@ public class LocalCache<K, V> {
 				// 否则,代表缓存中已存在（已更新）过期队列中需要更新时间
 				// 移除已有的
 				expireQueue.remove(node);
-				if (putIfAbsent != node) {
-					// 上面putifabsent判断的是key是否相同
-					// 此处表示将 key 的值进行替换 (若旧值与新值不同)
-					cache.replace(key, putIfAbsent, node);
-				}
 			}
 		} finally {
 			//释放锁
 			reentrantLock.unlock();
 		}
-		return (V) cache.get(key).value == null ? null : (V) cache.get(key).value;
+		return putIfAbsent == null ? null : (V) putIfAbsent.value;
 	}
 	
 	/**
@@ -192,9 +187,6 @@ public class LocalCache<K, V> {
 	 * 获取缓存
 	 */
 	public V get(String key) {
-		if (key == null) {
-			return null;
-		}
 		return cache.get(key) == null ? null : (V) cache.get(key).value;
 	}
 	

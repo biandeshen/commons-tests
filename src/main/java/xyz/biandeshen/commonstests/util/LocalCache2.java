@@ -3,9 +3,6 @@ package xyz.biandeshen.commonstests.util;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
@@ -18,7 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @date 2019/11/1816:24
  */
 @SuppressWarnings("all")
-public class LocalCache<K, V> {
+public class LocalCache2 {
 	/**
 	 * 缓存最大个数
 	 */
@@ -35,7 +32,7 @@ public class LocalCache<K, V> {
 	/**
 	 * 缓存
 	 */
-	private final ConcurrentMap<K, Node> cache;
+	private final ConcurrentMap<String, Node> cache;
 	/**
 	 * 到期队列
 	 */
@@ -46,7 +43,7 @@ public class LocalCache<K, V> {
 	private final ReentrantLock reentrantLock;
 	
 	
-	private LocalCache(Builder builder) {
+	private LocalCache2(Builder builder) {
 		//缓存及队列等参数赋值
 		this.CACHE_MAX_SIZE = builder.CACHE_MAX_SIZE;
 		this.EXPIRATION_TIME = builder.EXPIRATION_TIME;
@@ -70,11 +67,11 @@ public class LocalCache<K, V> {
 		cacheAndExpirationQueueManagementThreadPool.scheduleAtFixedRate(cacheCleaner);
 	}
 	
-	public static class Builder {
+	static class Builder {
 		/**
 		 * 缓存最大个数
 		 */
-		private Integer CACHE_MAX_SIZE = 2 << 16;
+		private Integer CACHE_MAX_SIZE = 2 << 10;
 		/**
 		 * 过期时间,默认一分钟
 		 */
@@ -123,8 +120,8 @@ public class LocalCache<K, V> {
 			return this;
 		}
 		
-		public LocalCache build() {
-			return new LocalCache(this);
+		public LocalCache2 build() {
+			return new LocalCache2(this);
 		}
 		
 	}
@@ -132,44 +129,38 @@ public class LocalCache<K, V> {
 	/**
 	 * 设置缓存
 	 */
-	public V set(K key, V value, long cacheTime) {
+	public Object set(String key, Object value, long cacheTime) {
 		//判断缓存中是否存在
 		Node node = new Node(key, value, (System.currentTimeMillis() + TimeUnit.MILLISECONDS.toMillis(cacheTime)));
 		//加锁判断,锁定过期队列,缓存则使用原子操作
 		reentrantLock.lock();
-		Node putIfAbsent;
 		try {
-			putIfAbsent = cache.putIfAbsent(key, node);
+			Node putIfAbsent = cache.putIfAbsent(key, node);
 			// 为空,则代表不存在,需在过期队列添加,过期队列的大小可能大于缓存
 			expireQueue.put(node);
 			if (putIfAbsent != null) {
 				// 否则,代表缓存中已存在（已更新）过期队列中需要更新时间
 				// 移除已有的
 				expireQueue.remove(node);
-				if (putIfAbsent != node) {
-					// 上面putifabsent判断的是key是否相同
-					// 此处表示将 key 的值进行替换 (若旧值与新值不同)
-					cache.replace(key, putIfAbsent, node);
-				}
 			}
 		} finally {
 			//释放锁
 			reentrantLock.unlock();
 		}
-		return (V) cache.get(key).value == null ? null : (V) cache.get(key).value;
+		return node.value;
 	}
 	
 	/**
 	 * 设置缓存
 	 */
-	public V set(K key, V value) {
+	public Object set(String key, Object value) {
 		return set(key, value, EXPIRATION_TIME);
 	}
 	
 	/**
 	 * 获取缓存
 	 */
-	public V getAndDelay(String key) {
+	public Object get(String key) {
 		Node node = cache.get(key);
 		// 加锁
 		reentrantLock.lock();
@@ -185,36 +176,13 @@ public class LocalCache<K, V> {
 		} finally {
 			reentrantLock.unlock();
 		}
-		return node == null ? null : (V) node.value;
-	}
-	
-	/**
-	 * 获取缓存
-	 */
-	public V get(String key) {
-		if (key == null) {
-			return null;
-		}
-		return cache.get(key) == null ? null : (V) cache.get(key).value;
-	}
-	
-	/**
-	 * 获取缓存
-	 */
-	public synchronized List<V> getAll() {
-		Collection<Node> values = cache.values();
-		ArrayList<Node> nodes = new ArrayList<>(values);
-		ArrayList<V> valueList = new ArrayList<>(nodes.size());
-		for (Node node : nodes) {
-			valueList.add((V) node.value);
-		}
-		return valueList;
+		return node == null ? null : node.value;
 	}
 	
 	/**
 	 * 移除缓存,并返回对应key的值
 	 */
-	public V remove(String key) {
+	public Object remove(String key) {
 		Node node = cache.remove(key);
 		//	加锁
 		reentrantLock.lock();
@@ -226,18 +194,14 @@ public class LocalCache<K, V> {
 		} finally {
 			reentrantLock.unlock();
 		}
-		return node == null ? null : (V) node.value;
-	}
-	
-	public int size() {
-		return cache.size();
+		return node == null ? null : node.value;
 	}
 	
 	/**
 	 * 缓存及过期队列管理线程池
 	 */
 	@SuppressWarnings("all")
-	public static class CacheAndExpirationQueueManagementThreadPool {
+	static class CacheAndExpirationQueueManagementThreadPool {
 		/**
 		 * 缓存清理线程池名称
 		 */
@@ -285,7 +249,7 @@ public class LocalCache<K, V> {
 			                                                   TimeUnit.MILLISECONDS);
 		}
 		
-		public static class Builder {
+		static class Builder {
 			/**
 			 * 缓存清理线程池名称
 			 */
@@ -393,15 +357,15 @@ public class LocalCache<K, V> {
 	/**
 	 * 数据存储节点
 	 */
-	private static class Node<K, V> implements Delayed {
+	private static class Node implements Delayed {
 		// key
-		private final K key;
+		private final String key;
 		// value
-		private final V value;
+		private final Object value;
 		// 预计过期时间 : 当前时间 + 过期时间
 		private long expireTime;
 		
-		Node(K key, V value, long expireTime) {
+		Node(String key, Object value, long expireTime) {
 			this.key = key;
 			this.value = value;
 			this.expireTime = expireTime;

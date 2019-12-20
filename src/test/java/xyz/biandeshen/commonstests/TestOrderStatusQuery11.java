@@ -1,23 +1,30 @@
 package xyz.biandeshen.commonstests;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+
 public class TestOrderStatusQuery11 {
 	private static final String strConst = "z宅J急S送g";
 	
 	public static void main(String[] args) {
 		//生成verifyData的规则:
-		// 1. 拼接: 四位随机数 + 客户标识(测试: test) + 报文( {"clientFlag": "test","orders": [{"mailNo": "A602908107966"}]} ) + 密钥(测试密钥: aafc04a1bacb487fa8d03f2a7bfdb555) + 常量值(z宅J急S送g) +四位随机数
+		// 1. 拼接: 四位随机数 + 客户标识(测试: test) + 报文( {"clientFlag": "test","orders": [{"mailNo": "A602908107966"}]} ) + 密钥
+		// (测试密钥: aafc04a1bacb487fa8d03f2a7bfdb555) + 常量值(z宅J急S送g) +四位随机数
 		// 2. md5加密上面拼接的字符串,获取 长度 32位 的 校验码
-		String url = "http://businesstest.zjs.com.cn:9200/interface/iwc/querystatustest";
-		String data = "{\"clientFlag\": \"test\",\"orders\": [{\"mailNo\": \"A602908107966\"}]}";
+		//String url = "http://businesstest.zjs.com.cn:9200/interface/iwc/querystatustest";
+		String url = "http://cntm.zjs.com.cn/interface/iwc/querystatus";
+		String data = "{\"clientFlag\": \"test\",\"orders\": [{\"mailNo\": \"ZJS002467140001\"}]}";
 		System.out.println("data = " + data);
 		String verifyData = GetVerifyDataByrdm(data, "1111", "1111", "test", "aafc04a1bacb487fa8d03f2a7bfdb555");
+		try {
+			verifyData = URLEncoder.encode(verifyData, StandardCharsets.UTF_8.toString());
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		System.out.println("verifyData = " + verifyData);
 		String str = "";
 		System.out.println(verifyData);
@@ -83,7 +90,8 @@ public class TestOrderStatusQuery11 {
 	}
 	
 	
-	public static String GetVerifyDataByrdm(String datajson, String rmd1, String rmd2, String clientFlag, String strSeed) {
+	public static String GetVerifyDataByrdm(String datajson, String rmd1, String rmd2, String clientFlag,
+	                                        String strSeed) {
 		
 		// 四位随机数 + 客户标识(测试为test) + 报文 + 密钥(测试密钥) + 常量值() +四位随机数
 		String str = rmd1 + clientFlag + datajson + strSeed + strConst + rmd2;
