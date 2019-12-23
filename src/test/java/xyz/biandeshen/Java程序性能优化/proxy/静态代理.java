@@ -31,14 +31,14 @@ interface IDBQuery {
 class DBQuery implements IDBQuery {
 	
 	public DBQuery() {
-		try {
-			// 模拟耗时操作
-			System.out.println("初始化开始。。。");
-			TimeUnit.SECONDS.sleep(3);
-			System.out.println("初始化已完成！");
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		//try {
+		//	// 模拟耗时操作
+		//	System.out.println("初始化开始。。。");
+		//	TimeUnit.SECONDS.sleep(3);
+		//	System.out.println("初始化已完成！");
+		//} catch (InterruptedException e) {
+		//	e.printStackTrace();
+		//}
 	}
 	
 	@Override

@@ -34,33 +34,24 @@ public class JDK动态代理 {
 	}
 }
 
-interface IBase {
-	IBase test();
-}
-
-class Base implements IBase {
-	
-	@Override
-	public IBase test() {
-		System.out.println("test...");
-		return this;
-	}
-}
-
 // 对比静态代理类 DBQueryProxy
+// 实现了一个 IDBQuery接口的代理类，内部逻辑由此实现
+// 使用这个handler先尝试生成真实主题对象，再生成动态代理对象,即 类中的 createJDKProxy方法
+// 生成代理类后,由newProxyInstance()方法返回该代理类的一个实例
 class JdkDbQueryHandler implements InvocationHandler {
-	private IDBQuery real = null;
 	
+	private IDBQuery real = null;
 	// proxy 即动态代理对象，可以返回，用来进行操作，还可以据此继续对动态代理对象进行代理
+	
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		if (real == null) {
 			real = new DBQuery();
 		}
 		if (method.getName().equals("request")) {
-			System.out.println("proxy.getClass().toString() = " + proxy.getClass().toString());
-			System.out.println("proxy.getClass().getName() = " + proxy.getClass().getName());
-			System.out.println("method.getName() = " + method.getName());
+			//System.out.println("proxy.getClass().toString() = " + proxy.getClass().toString());
+			//System.out.println("proxy.getClass().getName() = " + proxy.getClass().getName());
+			//System.out.println("method.getName() = " + method.getName());
 			return real.request();
 		}
 		//if (proxy instanceof IBase && method.getName().equals("test")) {
@@ -85,5 +76,19 @@ class JdkDbQueryHandler implements InvocationHandler {
 				new Class[]{IBase.class},
 				new JdkDbQueryHandler()
 		);
+	}
+	
+}
+
+interface IBase {
+	IBase test();
+}
+
+class Base implements IBase {
+	
+	@Override
+	public IBase test() {
+		System.out.println("test...");
+		return this;
 	}
 }

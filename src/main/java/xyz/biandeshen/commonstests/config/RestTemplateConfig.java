@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.*;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -226,17 +227,23 @@ public class RestTemplateConfig {
 	
 	
 	// ASYNC
+	@Description("AsyncRestTemplate 已过时，将用WebClient替代")
+	@Deprecated
 	public AsyncClientHttpRequestFactory asyncHttpRequestFactory() {
 		return new HttpComponentsAsyncClientHttpRequestFactory(asyncHttpClient());
 	}
 	
-	
 	@Bean
+	@Description("AsyncRestTemplate 已过时，将用WebClient替代")
+	@Deprecated
 	public AsyncRestTemplate asyncRestTemplate() {
 		return new AsyncRestTemplate(asyncHttpRequestFactory(), restTemplate());
 	}
 	
+	
 	@Bean
+	@Description("AsyncRestTemplate 已过时，将用WebClient替代")
+	@Deprecated
 	public CloseableHttpAsyncClient asyncHttpClient() {
 		try {
 			PoolingNHttpClientConnectionManager connectionManager =
