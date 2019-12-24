@@ -138,3 +138,8 @@ public class Test {
 > 层层相扣,实现了对输出流的增强,完成了对性能组件与功能组件的分离。
 >> 具体的增强,如BufferedOutputStream是在调用FileOutputStream的write前,将数据进行了缓存相关的操作,这就是具体的装饰类做的增强工作。由于每个具体实现的装饰类  
 >> 各不相同,通过灵活组合选择装饰类,能满足我们的各种需求,同时,明确的职责与功能划分,也降低了系统的耦合。
+
+
+## 参考
+1. [装饰模式](https://design-patterns.readthedocs.io/zh_CN/latest/structural_patterns/decorator.htm)
+2. 《Java程序性能优化》
