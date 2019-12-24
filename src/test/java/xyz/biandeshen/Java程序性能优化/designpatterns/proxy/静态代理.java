@@ -1,6 +1,4 @@
-package xyz.biandeshen.Java程序性能优化.proxy;
-
-import java.util.concurrent.TimeUnit;
+package xyz.biandeshen.Java程序性能优化.designpatterns.proxy;
 
 /**
  * @author fjp

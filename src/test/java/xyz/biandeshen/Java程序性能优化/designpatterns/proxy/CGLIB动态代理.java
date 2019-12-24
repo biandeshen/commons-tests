@@ -1,4 +1,4 @@
-package xyz.biandeshen.Java程序性能优化.proxy;
+package xyz.biandeshen.Java程序性能优化.designpatterns.proxy;
 
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;

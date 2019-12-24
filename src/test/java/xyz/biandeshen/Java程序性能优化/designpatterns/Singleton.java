@@ -1,4 +1,4 @@
-package xyz.biandeshen.designpatterns;
+package xyz.biandeshen.Java程序性能优化.designpatterns;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -6,11 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.time.Instant;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Phaser;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author fjp

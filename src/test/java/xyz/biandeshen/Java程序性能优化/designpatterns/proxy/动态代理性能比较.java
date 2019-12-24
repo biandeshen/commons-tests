@@ -1,4 +1,4 @@
-package xyz.biandeshen.Java程序性能优化.proxy;
+package xyz.biandeshen.Java程序性能优化.designpatterns.proxy;
 
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
