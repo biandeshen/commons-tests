@@ -17,7 +17,7 @@ public class TestOrderStatusQuery11 {
 		// 2. md5加密上面拼接的字符串,获取 长度 32位 的 校验码
 		//String url = "http://businesstest.zjs.com.cn:9200/interface/iwc/querystatustest";
 		String url = "http://cntm.zjs.com.cn/interface/iwc/querystatus";
-		String data = "{\"clientFlag\": \"test\",\"orders\": [{\"mailNo\": \"ZJS002467140001\"}]}";
+		String data = "{\"clientFlag\": \"test\",\"orders\": [{\"mailNo\": \"ZJS005265798182\"}]}";
 		System.out.println("data = " + data);
 		String verifyData = GetVerifyDataByrdm(data, "1111", "1111", "test", "aafc04a1bacb487fa8d03f2a7bfdb555");
 		try {

@@ -31,14 +31,14 @@ public class TestReentrantWriteAndWriteLock {
 		for (int i = 0; i < 5; i++) {
 			executorService.execute(() -> {
 				for (int j = 0; j < 10; j++) {
-					//rrwl.readLock().lock();
-					rrwl.writeLock().lock();
+					rrwl.readLock().lock();
+					//rrwl.writeLock().lock();
 					try {
 						data.addFirst(++value);
 						logger.info(Thread.currentThread().getName());
 					} finally {
-						//rrwl.readLock().unlock();
-						rrwl.writeLock().unlock();
+						rrwl.readLock().unlock();
+						//rrwl.writeLock().unlock();
 					}
 				}
 			});
@@ -47,8 +47,8 @@ public class TestReentrantWriteAndWriteLock {
 				for (int j = 0; j < 10; j++) {
 					Integer v;
 					do {
-						//rrwl.writeLock().lock();
-						rrwl.readLock().lock();
+						rrwl.writeLock().lock();
+						//rrwl.readLock().lock();
 						try {
 							v = data.pollLast();
 							if (v == null) {
@@ -58,8 +58,8 @@ public class TestReentrantWriteAndWriteLock {
 								break;
 							}
 						} finally {
-							rrwl.readLock().unlock();
-							//rrwl.writeLock().unlock();
+							//rrwl.readLock().unlock();
+							rrwl.writeLock().unlock();
 						}
 					} while (true);
 				}

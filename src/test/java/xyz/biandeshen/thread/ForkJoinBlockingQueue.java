@@ -21,7 +21,7 @@ import java.util.concurrent.*;
 @SuppressWarnings("all")
 public class ForkJoinBlockingQueue {
 	//查询路径
-	private static File root = new File("E:\\");
+	private static File root = new File("C:\\");
 	// private File root2 = new File("D:\\");
 	// private File root3 = new File("C:\\");
 	
@@ -31,10 +31,10 @@ public class ForkJoinBlockingQueue {
 			return true;
 		}
 		////查询规则
-		//return StringUtils.contains(file.getName(), ".pdf") &&
-		//		       StringUtils.contains(file.getName(), "并发");
+		return StringUtils.contains(file.getName(), ".pdf") &&
+				       StringUtils.contains(file.getName(), "阿里");
 		//查询规则
-		return StringUtils.contains(file.getName().toLowerCase(), ".pdf");
+		//return StringUtils.contains(file.getName().toLowerCase(), ".pdf");
 	};
 	
 	public static void main(String[] args) {
@@ -54,7 +54,7 @@ public class ForkJoinBlockingQueue {
 		Thread thread = new Thread(() -> {
 			BlockingDeque<File> indexBlockingDeque = ProduceAndConsumer.getIndexBlockingDeque();
 			while (!Thread.currentThread().isInterrupted()) {
-				try {
+					try {
 					File take = indexBlockingDeque.take();
 					if (take != null) {
 						System.out.println("查詢结果为 = " + take.getAbsolutePath());
@@ -146,6 +146,7 @@ class Indexer implements Runnable {
 		this.fileBlockingQueue = fileBlockingQueue;
 		this.fileBlockingDeque = fileBlockingDeque;
 	}
+	
 	
 	@Override
 	public void run() {

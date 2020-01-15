@@ -3,6 +3,7 @@ package xyz.biandeshen.commonstests.util;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
@@ -53,8 +54,7 @@ public class LocalCache2 {
 		reentrantLock = new ReentrantLock();
 		
 		//创建缓存及过期队列管理线程池
-		this.cacheAndExpirationQueueManagementThreadPool =
-				builder.cacheAndExpirationQueueManagementThreadPool;
+		this.cacheAndExpirationQueueManagementThreadPool = builder.cacheAndExpirationQueueManagementThreadPool;
 	}
 	
 	/**
@@ -239,8 +239,8 @@ public class LocalCache2 {
 			this.THREAD_RATE_TIME = builder.THREAD_RATE_TIME;
 			this.THREAD_PERIOD_TIME = builder.THREAD_PERIOD_TIME;
 			this.THREAD_DEAMON = builder.THREAD_DEAMON;
-			namedThreadFactory = new ThreadFactoryBuilder()
-					                     .setNameFormat(THREAD_POOL_NAME).setDaemon(THREAD_DEAMON).build();
+			namedThreadFactory =
+					new ThreadFactoryBuilder().setNameFormat(THREAD_POOL_NAME).setDaemon(THREAD_DEAMON).build();
 			expirationManagementThreadPool = new ScheduledThreadPoolExecutor(THREAD_POOL_CORESIZE, namedThreadFactory);
 		}
 		
@@ -286,8 +286,8 @@ public class LocalCache2 {
 			 * @param deamon
 			 * 		清理线程是否设置为守护线程（默认为true）
 			 */
-			public Builder(String threadPoolName, int threadPoolCoreSize, Long threadRateTime,
-			               Long threadPeriodTime, boolean deamon) {
+			public Builder(String threadPoolName, int threadPoolCoreSize, Long threadRateTime, Long threadPeriodTime,
+			               boolean deamon) {
 				this.THREAD_POOL_NAME = threadPoolName;
 				this.THREAD_POOL_CORESIZE = threadPoolCoreSize;
 				this.THREAD_RATE_TIME = threadRateTime;
@@ -381,9 +381,7 @@ public class LocalCache2 {
 				return false;
 			}
 			Node node = (Node) object;
-			return expireTime == node.expireTime &&
-					       key.equals(node.key) &&
-					       value.equals(node.value);
+			return expireTime == node.expireTime && key.equals(node.key) && value.equals(node.value);
 		}
 		
 		@Override
@@ -400,7 +398,8 @@ public class LocalCache2 {
 		public int compareTo(Delayed delayed) {
 			Node node = (Node) delayed;
 			if (node != null) {
-				return Math.toIntExact(this.expireTime - node.expireTime);
+				//return Math.toIntExact(this.expireTime - node.expireTime);
+				return Long.compare(this.expireTime, node.expireTime);
 			}
 			return -1;
 		}

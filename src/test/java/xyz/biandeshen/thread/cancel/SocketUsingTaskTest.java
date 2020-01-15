@@ -29,7 +29,7 @@ public class SocketUsingTaskTest {
 		
 		try {
 			String str = (String) submit.get();
-			submit. cancel(true);
+			submit.cancel(true);
 			if (SUCCESS.equals(str)) {
 				String name = Thread.currentThread().getName();
 				System.out.println("经过返回值比较，submit方法执行任务成功    thread name: " + name);

@@ -6,12 +6,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author fjp
  * @Title: singleton
  * @ProjectName commons-tests
- * @Description: TODO
+ * @Description: 单例模式-常见写法
  * @date 2019/12/1715:38
  */
 public class Singleton implements Serializable {
@@ -50,13 +54,37 @@ public class Singleton implements Serializable {
 		return SingletonHolder.instance;
 	}
 	
+	//Singl ton 类变成是可序列化 仅仅在声明中加上 implements Serializable 是不够的 为了维护并保证 singleton,
+	//必须声明所有实例域都是瞬时（ transient ）的，并提供一个 readResolve 方法
 	private Object readResolve() {
 		return singleton;
+	}
+	
+	
+	enum E1 {
+		e1 {
+			class e1Inner extends Singleton {
+				private String name;
+				
+				public String getName() {
+					return name;
+				}
+			}
+			
+			public String getE1e1Name() {
+				return new e1Inner().getName();
+			}
+			
+		}, e2 {
+		};
+		
+		private String name;
 	}
 	
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		Singleton singleton = Singleton.getInstance3();
 		System.out.println("singleton = " + singleton);
+		EnumSet<E1> singletonSet = EnumSet.of(E1.e1, E1.e2);
 		
 		//Phaser phaser = new Phaser(10) {
 		//	@Override
