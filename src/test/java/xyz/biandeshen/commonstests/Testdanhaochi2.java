@@ -16,7 +16,8 @@ public class Testdanhaochi2 {
 	public static void main(String[] args) {
 		
 		
-		String url="http://cntm.zjs.com.cn/interface/iwc/ctdanhaochitest";
+		//String url="http://cntm.zjs.com.cn/interface/iwc/ctdanhaochitest";
+		String url="http://businesstest.zjs.com.cn:9200/interface/iwc/ctdanhaochitest";
 		
 		//String jsonData="{\"key\":\"zgpTest\",\"clientFlag\":\"test\",\"applynum\":5}";
 		String jsonData="{\"key\":\"DH100580\",\"clientFlag\":\"test\",\"applynum\":5}";

@@ -30,8 +30,8 @@ public class TestPostCommessageStatus4 {
 	
 	String uuid = UUID.randomUUID().toString().replace("-", "");
 	private static final String clientFlag = "\"test\"";
-	private static final String mailNo = "\"ZJS111747063525\"";
-	private static final String orderNo = "\"SKPZYB125560461\"";
+	private static final String mailNo = "\"ZJS024032437284\"";
+	private static final String orderNo = "\"123456\"";
 	private static String wt = "\"2201\"";
 	//月结编码
 	private static String ce = "\"100310\"";
@@ -40,7 +40,9 @@ public class TestPostCommessageStatus4 {
 	//重量
 	private static String weight = "null";
 	
-	private static final String url = "http://10.10.12.109:23009/acceptstatedata";
+	//private static final String url = "http://10.10.12.109:23009/acceptstatedata";
+	
+	private static final String url = "http://119.145.30.196:8085/FGBP-FACE-UNIFIEDAPI/third/zjs/trajectory";
 	
 	//拿趣用
 	//private static final String url = "https://dev0-api.nqyong.com/api/order/zhaijisong/stateNotify";
@@ -145,8 +147,6 @@ public class TestPostCommessageStatus4 {
 			e.printStackTrace();
 		}
 		return resStr;
-		
-		
 	}
 	
 	private LocalDateTime localDateTime = LocalDateTime.now();

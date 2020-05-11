@@ -26,19 +26,22 @@ import java.util.Map;
  */
 
 public class TestPostStatus4 {
-	//private static final String clientFlag = "test";
-	private static final String clientFlag = "JiuYe";
-	private static final String mailNo = "A602904138641";
-	private static final String orderNo = "JY0006821234";
+	private static final String clientFlag = "test";
+	//private static final String clientFlag = "JiuYe";
+	private static final String mailNo = "ZJS024032437273";
+	private static final String orderNo = "RW2020042200000008";
+	
+	private static final String strSeed = "aafc04a1bacb487fa8d03f2a7bfdb555";
 	//拿趣用
 	//private static final String url = "https://dev0-api.nqyong.com/api/order/zhaijisong/stateNotify";
 	//宽容
 	//private static final String url = "http://ps.aries-far.com/test1/b2c/routeTrack/zjsOrderTrack";
-	private static final String strSeed = "aafc04a1bacb487fa8d03f2a7bfdb555";
 	
+	//银雁
+	private static final String url = "http://119.145.30.196:8085/FGBP-FACE-UNIFIEDAPI/third/zjs/trajectory";
 	
 	//private static final String url = "http://127.0.0.1:8081/interface1";
-	private static final String url = "http://127.0.0.1:8101/acceptstatedata";
+	//private static final String url = "http://127.0.0.1:8101/acceptstatedata";
 	
 	@Test
 	// TODO 揽收
@@ -70,35 +73,35 @@ public class TestPostStatus4 {
 		System.err.println("签收:" + postStatusToURL(SIGNED));
 	}
 	
-	@Test
-	// TODO 返货入库
-	public void postRARRIVAL() {
-		System.err.println("返货入库:" + postStatusToURL(RARRIVAL));
-	}
-	
-	@Test
-	// TODO 返货出库
-	public void postRSENTSCAN() {
-		System.err.println("返货出库:" + postStatusToURL(RSENT_SCAN));
-	}
-	
-	@Test
-	// TODO 返货派送
-	public void postRDEPARTURE() {
-		System.err.println("返货派送:" + postStatusToURL(RDEPARTURE));
-	}
-	
-	@Test
-	// TODO 返货签收
-	public void postRSIGNED() {
-		System.err.println("返货签收:" + postStatusToURL(RSIGNED));
-	}
-	
-	@Test
-	// TODO 拒收
-	public void postFAILED() {
-		System.err.println("拒收:" + postStatusToURL(FAILED));
-	}
+	//@Test
+	//// TODO 返货入库
+	//public void postRARRIVAL() {
+	//	System.err.println("返货入库:" + postStatusToURL(RARRIVAL));
+	//}
+	//
+	//@Test
+	//// TODO 返货出库
+	//public void postRSENTSCAN() {
+	//	System.err.println("返货出库:" + postStatusToURL(RSENT_SCAN));
+	//}
+	//
+	//@Test
+	//// TODO 返货派送
+	//public void postRDEPARTURE() {
+	//	System.err.println("返货派送:" + postStatusToURL(RDEPARTURE));
+	//}
+	//
+	//@Test
+	//// TODO 返货签收
+	//public void postRSIGNED() {
+	//	System.err.println("返货签收:" + postStatusToURL(RSIGNED));
+	//}
+	//
+	//@Test
+	//// TODO 拒收
+	//public void postFAILED() {
+	//	System.err.println("拒收:" + postStatusToURL(FAILED));
+	//}
 	
 	
 	private String postStatusToURL(String nowStr) {

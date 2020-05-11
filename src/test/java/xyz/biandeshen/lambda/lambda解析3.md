@@ -1,168 +1,45 @@
-package xyz.biandeshen.lambda;
+### Java 中 lambda 表达式解析（3）
+>  Java中lambda表达式的本质就是函数式接口的具体实现类的实例对象。
 
-
+- 以jdk中的Function函数式接口为例进行解析
+```java
 /**
- * @FileName: TestFunction
- * @Author: admin
- * @Date: 2020/1/14 14:15
- * @Description: 简单的Function实例
- * History:
- * <author>          <time>          <version>
- * admin           2020/1/14           版本号
+ * @param <T> the type of the input to the function
+ * @param <R> the type of the result of the function
  */
 @FunctionalInterface
-public interface TestFunction<T, R> {
-	R operate(T num);
-	
-	public static void main(String[] args) {
-		TestFunction<Integer, Integer> negativeOp = x -> -1 * x;
-		TestFunction<Integer, Double> floatOp = x -> 0.7 * x;
-		Integer intNum = negativeOp.operate(10);
-		Double doubleNum = floatOp.operate(intNum);
-		Double doubleNum2 = floatOp.operate(negativeOp.operate(10));
-		System.out.println("doubleNum = " + doubleNum);
-		System.out.println("doubleNum2 = " + doubleNum2);
-		
-		
-		TestFunction<Integer, TestFunction<Integer, Integer>> functionNegativeOp = new TestFunction<Integer,
-				                                                                                           TestFunction<Integer, Integer>>() {
-			@Override
-			public TestFunction<Integer, Integer> operate(Integer num) {
-				System.out.println("传入参数为 = " + num);
-				return new TestFunction<Integer, Integer>() {
-					@Override
-					public Integer operate(Integer num) {
-						return -1 * num;
-					}
-				};
-			}
-		};
+public interface Function<T, R> {
+    //作为抽象函数接口的基础方法，接受T类型返回R类型
+    R apply(T t);
 
-		TestFunction<Integer, TestFunction<Integer, Integer>> functionNegativeOp2 = num -> {
-			System.out.println("传入参数为 = " + num);
-			return num1 -> -1 * num *num1;
-		};
+    /**
+     * 返回一个复合函数，该函数首先将{@code before}函数应用于其输入，然后此函数应用before函数结果。
+     * 如果任何一个函数的求值抛出异常，它将被传递给调用该组合函数的人。
+     */
+    default <V> Function<V, R> compose(Function<? super V, ? extends T> before) {
+        Objects.requireNonNull(before);
+        return (V v) -> apply(before.apply(v));
+    }
+    
+    /**
+     * 返回一个复合函数，该函数首先将此函数本身应用于其输入，然后{@code after}函数应用输入的结果。
+     * 如果任一函数的求值抛出异常，则将其传递给组合函数的调用者。
+     */
+    default <V> Function<T, V> andThen(Function<? super R, ? extends V> after) {
+        Objects.requireNonNull(after);
+        return (T t) -> after.apply(apply(t));
+    }
 
-		Integer operate = functionNegativeOp2.operate(2).operate(4);
-		System.out.println("operate = " + operate);
-		
-		//TestFunction<TestFunction<Integer, Integer>, TestFunction<Integer, Double>> intToDoubleOp =
-		//		new TestFunction<TestFunction<Integer, Integer>, TestFunction<Integer, Double>>() {
-		//	@Override
-		//	public TestFunction<Integer, Double> operate(TestFunction<Integer, Integer> num) {
-		//		int sum = 10;
-		//		Integer negativeOpValue = num.operate(sum);
-		//		System.out.println("negativeOpValue = " + negativeOpValue);
-		//		return new TestFunction<Integer, Double>() {
-		//			@Override
-		//			public Double operate(Integer num12) {
-		//				return 0.7 * num12 * negativeOpValue;
-		//			}
-		//		};
-		//	}
-		//};
-		//
-		//TestFunction<TestFunction<Integer, Integer>, TestFunction<Integer, Double>> intToDoubleOp2 = num -> {
-		//	int sum = 10;
-		//	Integer negativeOpValue = num.operate(sum);
-		//	System.out.println("negativeOpValue = " + negativeOpValue);
-		//	return (TestFunction<Integer, Double>) num12 -> 0.7 * num12 * negativeOpValue;
-		//};
-		//TestFunction<Integer, Integer> negativeOp = x -> -1 * x;
-		//TestFunction<Integer, Double> operate = intToDoubleOp2.operate(negativeOp);
-		//Double operateValue = operate.operate(10);
-		//Double operateValue2 = intToDoubleOp2.operate(x -> -1 * x).operate(10);
-		//System.out.println("operateValue = " + operateValue);
-		//System.out.println("operateValue2 = " + operateValue2);
-		
-	}
+    /**
+     * 返回一个总是返回其输入参数的函数。
+     */
+    static <T> Function<T, T> identity() {
+        return t -> t;
+    }
 }
+```
 
-class NegativeNumberOP implements TestFunction<Integer, Integer> {
-	@Override
-	public Integer operate(Integer num) {
-		return -1 * num;
-	}
-}
-
-class FloatingNumberOP implements TestFunction<Integer, Double> {
-	@Override
-	public Double operate(Integer num) {
-		return 0.7 * num;
-	}
-}
-
-class FuncationOp implements TestFunction<Integer, TestFunction> {
-	@Override
-	public TestFunction<Integer, Integer> operate(Integer num) {
-		return new NegativeNumberOP();
-	}
-}
-
-class FunctionNegativeOp implements TestFunction<Integer, TestFunction<Integer, Integer>> {
-	@Override
-	public TestFunction<Integer, Integer> operate(Integer num) {
-		return new NegativeNumberOP();
-	}
-}
-
-class FunctionFloatingOp implements TestFunction<Integer, TestFunction<Integer, Double>> {
-	@Override
-	public TestFunction<Integer, Double> operate(Integer num) {
-		return new FloatingNumberOP();
-	}
-}
-
-// 创建一个实现类并重写operate方法，
-// 将方法实现为传入参数为Integer时设置为它的负数
-//
-// 此时即可在main方法中声明接口，创建具体实现类，运用重写的操作
-//	public static void main(String[] args) {
-//		TestFunction testFunction = new NegativeNumberOP();
-//		Object operate = testFunction.operate(666);
-//		System.out.println("operate = " + operate);
-//	}
-//
-//  若此操作不需要多次复用，那可以用嵌套类的形式，创建一个匿名类
-//	public static void main(String[] args) {
-//		TestFunction testFunction = new TestFunction() {
-//			@Override
-//			public Integer operate(Integer obj) {
-//				return -1 * obj;
-//			}
-//		};
-//		Object operate = testFunction.operate(666);
-//		System.out.println("operate = " + operate);
-//	}
-//  此时，匿名类与具体实现类只是类的形式不同，但它们都是接口的一个实现类，它们的方法相同
-//  我们此时可以简化匿名类的写法
-//  一般来说，我们通过 TestFunction testFunction = new TestFunction(){} 来 new 一个接口的内部类,
-//  因此，只要我们有了声明 TestFunction testFunction，后面的 new TestFunction 就能依据声明被自动推断出来，
-//  我们就可以简化 new TestFunction，无需写
-//  同时，当接口中只有一个方法需要我们重写时，
-//  @Override
-//	public Integer operate(Integer obj) {
-//  这个重写的注解以及方法的名称、参数类型、返回类型也能被自动推断
-//  因此，有返回值时将会有return，无返回值时将没有return也能被推断
-//  此时，方法的具体实现简化写成
-//  (Integer obj) -> {return -1 * obj;};
-//  括号中的是方法的参数，箭头指向方法，大括号内是具体的实现
-//  我们知道，参数类型与返回类型是可以被推断出来的，所以参数类型 Integer 与 return 就可以被忽略
-//  (obj) -> {-1 * obj;};
-//  此时这种形态将会报错，因为 -1 * obj; 在{}中并不是一条完整的语句，但此时只有这一条语句，
-//  方法体{}可以被推断出来，所以可以省略方法体；而多条语句时则方法体与return都不可省略
-//  因此 可以简化写成 (obj) -> -1 * obj;
-//  我们知道，箭头左侧的括号内都是方法的参数，所以箭头左边方法的括号也可以省略，只保留参数
-//  此时可以简化写成 obj -> -1 * obj;
-//  同时，我们也可以知道 方法中的参数名称都是 形式参数，所以可以自由命名
-//  因此 参数名称可以随意填写，即 o -> -1 * o; 与 obj -> -1 * obj; 相同。
-//  Java中，同名方法的参数类型是不能相同的，当我们确定一个方法时，只要知道方法名称与方法参数的个数、类型及顺序，
-//  因此，当方法简化成函数式时，箭头左边的参数类型，个数，顺序确定，就能表示对应的方法，
-//  而对应的参数的名称，则是形式参数，可以随意命名，分隔方式仍旧以逗号
-//  因此 多个参数的表达式 就可以写为 参数名1，参数名2，参数名3 -> 的形式
-//
-//  结论： Java中lambda表达式的本质就是接口的实现类的实例（匿名类对象）。
-
+> **可知，匿名类与具体实现类只是形式不同，但它们都是接口的实现类，且方法相同**
 
 //  不过，在有了泛型后，仍旧使用原生态类型，就失掉了泛型在安全性和描述性方面的所有优势。
 //  譬如，private final List list = new ArrayList(); 使用原生态类型声明一个list,

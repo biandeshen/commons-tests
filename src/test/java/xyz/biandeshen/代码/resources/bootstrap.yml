@@ -1,0 +1,38 @@
+server:
+  port: 30183
+spring:
+  application:
+    name: dj-fjp-danniao
+  cloud:
+    inetutils:
+      ignored-interfaces:
+        - eth0
+        - eth1
+        - eth2
+        - eth3
+        - lo
+  profiles:
+    active: prod
+encrypt:
+  failOnError: false
+
+eureka:
+  instance:
+    hostname: dj-fjp-danniao
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      #正式
+      defaultZone: http://duijiegroup:duijiegroup@10.10.129.79:8762/eureka/,http://duijiegroup:duijiegroup@10.10.129.78:8762/eureka/,http://duijiegroup:duijiegroup@10.10.129.80:8762/eureka/#
+      #测试
+#      defaultZone: http://10.10.6.93:8761/eureka/
+
+info:
+  contact:
+    appName: dj-fjp-danniao
+    author: fjp
+    introduce: 对接-定制-丹鸟
+  build:
+    artifact: "@project.artifactId@"
+    name: "@project.name@"
+    version: "@project.version@"

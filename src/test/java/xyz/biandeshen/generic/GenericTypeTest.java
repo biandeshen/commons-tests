@@ -37,15 +37,12 @@ public class GenericTypeTest {
 	}
 	
 	public static void minmaxBonus(Manager[] a, Pair<? super Manager> result) {
-		if (a.length == 0)
-			return;
+		if (a.length == 0) return;
 		Manager min = a[0];
 		Manager max = a[0];
 		for (Manager manager : a) {
-			if (min.getBonus() > manager.getBonus())
-				min = manager;
-			if (max.getBonus() < manager.getBonus())
-				max = manager;
+			if (min.getBonus() > manager.getBonus()) min = manager;
+			if (max.getBonus() < manager.getBonus()) max = manager;
 		}
 		result.setFirst(min);
 		result.setSecond(max);
