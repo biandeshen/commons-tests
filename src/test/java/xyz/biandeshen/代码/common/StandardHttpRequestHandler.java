@@ -1,6 +1,5 @@
 package xyz.biandeshen.代码.common;
 
-import cn.com.zjs.cainiaostatus.util.JsonUtils;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -8,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import xyz.biandeshen.代码.JsonUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -32,10 +32,7 @@ public class StandardHttpRequestHandler {
 		this.restTemplate = restTemplate;
 	}
 	
-	public String zjsStandardPost(
-			String jsonData, String url, String clientFlag,
-			String verifyData
-	) {
+	public String zjsStandardPost(String jsonData, String url, String clientFlag, String verifyData) {
 		MultiValueMap<String, Object> postParameters = new LinkedMultiValueMap<>();
 		postParameters.add("clientFlag", clientFlag);
 		postParameters.add("verifyData", verifyData);
@@ -62,10 +59,8 @@ public class StandardHttpRequestHandler {
 		return commonFormURLENCODEDStandardPost(linkedMultiValueMap, url, null);
 	}
 	
-	public String commonFormURLENCODEDStandardPost(
-			MultiValueMap linkedMultiValueMap, String url,
-			HttpHeaders httpHeaders
-	) {
+	public String commonFormURLENCODEDStandardPost(MultiValueMap linkedMultiValueMap, String url,
+	                                               HttpHeaders httpHeaders) {
 		if (httpHeaders == null) {
 			httpHeaders = new HttpHeaders();
 		}
@@ -88,10 +83,7 @@ public class StandardHttpRequestHandler {
 		//当接口参数被@RequestBody修饰的时候，可以使用HashMap，实体类等传递参数(MediaType.APPLICATION_JSON)
 		//地址1: https://www.cnblogs.com/shoren/p/RestTemplate-problem.html
 		//地址2: https://my.oschina.net/haokevin/blog/2254206
-		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(
-				linkedMultiValueMap,
-				httpHeaders
-		);
+		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(linkedMultiValueMap, httpHeaders);
 		return restTemplate.postForObject(url, request, String.class);
 	}
 	
@@ -100,8 +92,7 @@ public class StandardHttpRequestHandler {
 		Set set = linkedMultiValueMap.keySet();
 		if (set.size() > 0) {
 			sbUrl.append("?");
-			set.forEach(x -> sbUrl.append(x.toString()).append("={").append(x.toString()).append(
-					"}").append("&"));
+			set.forEach(x -> sbUrl.append(x.toString()).append("={").append(x.toString()).append("}").append("&"));
 			//lambda 与 此等效
 			//for (Object obj : set) {
 			//	sbUrl.append(obj.toString()).append("={").append(obj.toString()).append("}")
@@ -128,18 +119,52 @@ public class StandardHttpRequestHandler {
 		return restTemplate.postForObject(url, formEntity, String.class);
 	}
 	
-	public <T> T commonEntityStandardRequest(
-			String url, Object obj, MediaType mediaType,
-			Class<T> clazz, HttpMethod httpMethod,
-			Object... uriVariables
-	) {
+	/**
+	 * @param url
+	 * @param obj
+	 * @param mediaType
+	 * @param reponseType
+	 * @param httpMethod
+	 * @param httpHeaders
+	 * @param uriVariables
+	 * @param <T>
+	 *
+	 * @return responseType
+	 * // 1. 当headers设置为MediaType.APPLICATION_FORM_URLENCODED(或不设置)时，
+	 * // 此写法等效于postman中 Body -》 x-www-form-urlencoded  -》 Key,Value
+	 * // 通常以RequestBody的参数接收形式接收时，请求类型支持 get/post , 参数值为 interface?var1=val1&var2=val2&....
+	 * // 参数值中参数名称为 LinkedMultiValueMap 中的 key, 参数值为 LinkedMultiValueMap 中 key 对应的 value
+	 * // 2. 当headers设置为MediaType.APPLICATION_JSON_UTF8时，
+	 * // 此写法等效于postman中 Body -》raw -》application/json -》json
+	 * // 通常以RequestBody的参数接收形式接收时，请求类型支持 get/post , 参数值为 标准json
+	 * // 参数值json中参数键值对中的键为 LinkedMultiValueMap 中的 key, 参数键值对中的值为 LinkedMultiValueMap 中 key 对应的 value
+	 */
+	public <T> T commonEntityStandardRequest(String url, Object obj, MediaType mediaType, Class<T> reponseType,
+	                                         HttpMethod httpMethod, HttpHeaders httpHeaders, Object... uriVariables) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(mediaType);
+		if (mediaType != null) {
+			headers.setContentType(mediaType);
+		}
+		// 设置 请求头中 的  希望服务器返回给客户端的 数据类型
+		// eg:
+		//List<MediaType> acceptableMediaTypes = new ArrayList<>();
+		//if (DEFAULT_TEXT_TYPE.equals(textType.toLowerCase())) {
+		//	MediaType type = MediaType.parseMediaType("application/json;charset=UTF-8");
+		//	headers.setContentType(type);
+		//	acceptableMediaTypes.add(type);
+		//	// 此处设置
+		//	headers.setAccept(acceptableMediaTypes);
+		//} else {
+		//	MediaType type = MediaType.parseMediaType("application/x-www-form-urlencoded;charset=UTF-8");
+		//	headers.setContentType(type);
+		//	acceptableMediaTypes.add(type);
+		//	headers.setAccept(acceptableMediaTypes);
+		//}
+		
 		headers.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
 		HttpEntity<Object> formEntity = new HttpEntity<>(obj, headers);
-		ResponseEntity<T> responseEntity = restTemplate.exchange(url, httpMethod, formEntity,
-		                                                         clazz, uriVariables
-		);
+		ResponseEntity<T> responseEntity = restTemplate.exchange(url, httpMethod, formEntity, reponseType,
+		                                                         uriVariables);
 		return responseEntity.getBody();
 	}
 	
