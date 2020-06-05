@@ -38,7 +38,7 @@ public class JDK动态代理 {
 // 实现了一个 IDBQuery接口的代理类，内部逻辑由此实现
 // 使用这个handler先尝试生成真实主题对象，再生成动态代理对象,即 类中的 createJDKProxy方法
 // 生成代理类后,由newProxyInstance()方法返回该代理类的一个实例
-class JdkDbQueryHandler implements InvocationHandler {
+class  JdkDbQueryHandler implements InvocationHandler {
 	
 	private IDBQuery real = null;
 	// proxy 即动态代理对象，可以返回，用来进行操作，还可以据此继续对动态代理对象进行代理

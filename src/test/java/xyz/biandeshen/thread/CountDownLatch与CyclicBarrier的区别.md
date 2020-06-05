@@ -1,0 +1,3 @@
+从代码中可以看出，执行CountDownLatch时，主线程阻塞，直至计数器置零时主线程才继续执行。
+执行CyclicBarrier时，主线程先行执行完毕后，其他线程仍在执行，实际上阻塞的是其他线程。
+即二者执行时阻塞的线程不同，且CountDownLatch归零后无法再继续使用，CyclicBarrier可以反复使用。

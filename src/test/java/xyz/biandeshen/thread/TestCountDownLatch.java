@@ -1,5 +1,8 @@
 package xyz.biandeshen.thread;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -14,7 +17,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @date 2019/9/3014:36
  */
 public class TestCountDownLatch {
+	private static final Logger logger = LoggerFactory.getLogger(TestCountDownLatch.class);
+	
 	public static void main(String[] args) {
+		logger.info("Thread.currentThread().getName() = {}  Start!", Thread.currentThread().getName());
+		
 		int count = 100;
 		final CountDownLatch cdl = new CountDownLatch(count);
 		AtomicInteger sum = new AtomicInteger();
@@ -41,6 +48,8 @@ public class TestCountDownLatch {
 		executorService.shutdown();
 		System.err.println("cdl.getCount() = " + cdl.getCount());
 		System.out.println("sum.get() = " + sum.get());
+		
+		logger.info("Thread.currentThread().getName() = {}  Start!", Thread.currentThread().getName());
 	}
 }
 

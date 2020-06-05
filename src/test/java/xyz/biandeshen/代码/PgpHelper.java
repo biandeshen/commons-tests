@@ -293,7 +293,6 @@ public class PgpHelper {
 		
 		throw new IllegalArgumentException("Can't find signing key in key ring.");
 	}
-	
 	public byte[] createSignature(String fileName, InputStream keyIn, OutputStream out, char[] pass, boolean armor) throws GeneralSecurityException, IOException, PGPException {
 		
 		

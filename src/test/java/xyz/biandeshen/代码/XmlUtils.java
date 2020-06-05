@@ -14,9 +14,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author fjp
@@ -80,9 +78,8 @@ public final class XmlUtils {
 	 * 把对象转化成xml输出到控制台
 	 */
 	@SuppressWarnings("all")
-	public static <T> void writeToConsole(Class<T>[] clazz, T t, String xsdSchemaRelativePath) throws
-	                                                                                           JAXBException,
-	                                                                                           SAXException {
+	public static <T> void writeToConsole(Class<T>[] clazz, T t, String xsdSchemaRelativePath) throws JAXBException,
+	                                                                                                  SAXException {
 		Marshaller marshaller = object2xml(clazz, xsdSchemaRelativePath);
 		marshaller.marshal(t, System.out);
 	}
@@ -110,10 +107,9 @@ public final class XmlUtils {
 	 * 把对象转化成xml字符串
 	 */
 	@SuppressWarnings("all")
-	public static <T> String writeToString(Class<T>[] clazz, T t, String xsdSchemaRelativePath) throws
-	                                                                                            JAXBException,
-	                                                                                            SAXException,
-	                                                                                            IOException {
+	public static <T> String writeToString(Class<T>[] clazz, T t, String xsdSchemaRelativePath) throws JAXBException,
+	                                                                                                   SAXException,
+	                                                                                                   IOException {
 		try (StringWriter writer = new StringWriter();) {
 			Marshaller marshaller = object2xml(clazz, xsdSchemaRelativePath);
 			//writer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");

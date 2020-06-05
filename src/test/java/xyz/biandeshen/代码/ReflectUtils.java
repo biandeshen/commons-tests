@@ -26,7 +26,7 @@ public class ReflectUtils {
 	 *
 	 * @param obj
 	 */
-	public <T> Map<String, Object> readAttributeValue(T obj) {
+	public static <T> Map<String, Object> readAttributeValue(T obj) {
 		Map<String, Object> objectMap = new Hashtable<>();
 		//得到class
 		Class cls = obj.getClass();

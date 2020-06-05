@@ -13,7 +13,7 @@ import java.util.concurrent.*;
  * @date 2019/10/1215:37
  */
 public class TestCyclicBarrier implements Runnable {
-	public static final Logger logger = LoggerFactory.getLogger(TestCyclicBarrier.class);
+	private static final Logger logger = LoggerFactory.getLogger(TestCyclicBarrier.class);
 	
 	/**
 	 * cyclicBarrier 栅栏
@@ -54,6 +54,7 @@ public class TestCyclicBarrier implements Runnable {
 	}
 	
 	public static void main(String[] args) {
+		logger.info("Thread.currentThread().getName() = {}  Start!", Thread.currentThread().getName());
 		ExecutorService executorService = Executors.newFixedThreadPool(5);
 		for (int i = 0; i < 5; i++) {
 			TestCyclicBarrier testCyclicBarrier = new TestCyclicBarrier(i);
@@ -61,5 +62,7 @@ public class TestCyclicBarrier implements Runnable {
 		}
 		//executorService.awaitTermination()
 		executorService.shutdown();
+		logger.info("Thread.currentThread().getName() = {} End!", Thread.currentThread().getName());
+		
 	}
 }

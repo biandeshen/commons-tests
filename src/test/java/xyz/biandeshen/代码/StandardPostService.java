@@ -1,6 +1,5 @@
 package xyz.biandeshen.代码;
 
-import com.zjs.edistorage.utils.common.JsonUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.slf4j.Logger;
@@ -14,6 +13,7 @@ import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
+import xyz.biandeshen.代码.common.StandardHttpRequestHandler;
 
 import java.net.BindException;
 import java.net.ConnectException;
@@ -275,7 +275,7 @@ public class StandardPostService {
 		try {
 			logger.info("{} 调用{}接口参数为: data={}", uuid, interfaceName, obj.toString());
 			responseJson = standardHttpRequestHandler.commonEntityStandardRequest(url, obj, MediaType.TEXT_XML,
-			                                                                      String.class, HttpMethod.POST,
+			                                                                      String.class, HttpMethod.POST, null,
 			                                                                      (Object[]) null);
 		} catch (Exception e) {
 			logger.warn("{} 调用{}接口异常! 异常原因: {}", uuid, interfaceName, e);
@@ -315,7 +315,8 @@ public class StandardPostService {
 		try {
 			logger.info("{} 调用{}接口参数为: data={}", uuid, interfaceName, obj.toString());
 			responseEntity = standardHttpRequestHandler.commonEntityStandardRequest(url, obj, mediaType, clazz,
-			                                                                        HttpMethod.POST, uriVariables);
+			                                                                        HttpMethod.POST, null,
+			                                                                        uriVariables);
 		} catch (Exception e) {
 			logger.warn("{} 调用{}接口异常! 异常原因: {}", uuid, interfaceName, e);
 			throw new RuntimeException("调用" + interfaceName + "接口发生异常!", e);

@@ -1,0 +1,2 @@
+"<% def root = new groovy.json.JsonSlurper().parseText(data); %>" +
+                "  <logisticProviderID>${root.self_service_tel.clientFlag}</logisticProviderID>  \n";

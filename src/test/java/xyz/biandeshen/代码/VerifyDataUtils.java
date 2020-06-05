@@ -1,12 +1,12 @@
-package xyz.biandeshen.代码;
+package com.zjs.edistorage.utils.common;
 
-import com.zjs.customer.yl.utils.common.EncryptUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @author fjp
@@ -32,7 +32,8 @@ public class VerifyDataUtils {
 		List<String> verifyDatas = new LinkedList<>();
 		if (Objects.nonNull(orderMsgs) && orderMsgs.size() > 0) {
 			for (String orderMsg : orderMsgs) {
-				String verifyData = getVerifyDataByRdm(orderMsg, RandomStringUtils.random(4, uuid), RandomStringUtils.random(4, uuid), clientFlag, strSeed);
+				String verifyData = getVerifyDataByRdm(orderMsg, RandomStringUtils.random(4, uuid),
+				                                       RandomStringUtils.random(4, uuid), clientFlag, strSeed);
 				verifyDatas.add(verifyData);
 			}
 		}
@@ -50,7 +51,11 @@ public class VerifyDataUtils {
 	 * @return verifyData
 	 */
 	public static String getVerifyData(String uuid, String datajson, String clientFlag, String strSeed) {
-		return getVerifyDataByRdm(datajson, RandomStringUtils.random(4, uuid), RandomStringUtils.random(4, uuid), clientFlag, strSeed);
+		if (Objects.isNull(uuid) || uuid.isEmpty()) {
+			uuid = UUID.randomUUID().toString().replace("-", "");
+		}
+		return getVerifyDataByRdm(datajson, RandomStringUtils.random(4, uuid), RandomStringUtils.random(4, uuid),
+		                          clientFlag, strSeed);
 	}
 	
 	
@@ -68,8 +73,11 @@ public class VerifyDataUtils {
 	 *
 	 * @return 校验结果TRUE | FALSE
 	 */
-	public static boolean checkAndReVerifyData(String jsonData, String customerVerifyData, String custerClientFlag, String customerStrSeed) {
-		String myReVerifyData = getVerifyDataByRdm(jsonData, customerVerifyData.substring(0, 4), customerVerifyData.substring(customerVerifyData.length() - 4), custerClientFlag, customerStrSeed);
+	public static boolean checkAndReVerifyData(String jsonData, String customerVerifyData, String custerClientFlag,
+	                                           String customerStrSeed) {
+		String myReVerifyData = getVerifyDataByRdm(jsonData, customerVerifyData.substring(0, 4),
+		                                           customerVerifyData.substring(customerVerifyData.length() - 4),
+		                                           custerClientFlag, customerStrSeed);
 		return StringUtils.equals(customerVerifyData, myReVerifyData);
 	}
 	
@@ -89,7 +97,8 @@ public class VerifyDataUtils {
 	 *
 	 * @return verifyData
 	 */
-	public static String getVerifyDataByRdm(String datajson, String rmd1, String rmd2, String clientFlag, String strSeed) {
+	public static String getVerifyDataByRdm(String datajson, String rmd1, String rmd2, String clientFlag,
+	                                        String strSeed) {
 		String strConst = "z宅J急S送g";
 		String str = rmd1 + clientFlag + datajson + strSeed + strConst + rmd2;
 		String strMd5 = EncryptUtils.encryptMD5(str, "UTF-8");
@@ -103,10 +112,14 @@ public class VerifyDataUtils {
 	
 	//public static void main(String[] args) {
 	//	String verifyData = "6q4u7b80bd69a57d88667f24f6q4u";
-	//	String jsonData = "{\"clientFlag\":\"test\",\"mailNo\":\"A001705874494\",\"orderNo\":\"518061054080517801\",\"time\":\"2018-06-12 12:01:01\",\"desc\":\"客户已签收\",\"city\":\"鄂尔多斯市\",\"facilityType\":\"1\",\"facilityNo\":\"8884\",\"facilityName\":\"内蒙古_鄂尔多斯分拨站_伊金霍洛旗A点\",\"action\":\"SIGNED\",\"tz\":\"8\",\"country\":\"China\",\"singer\":\"李慧芳\"}";
+	//	String jsonData = "{\"clientFlag\":\"test\",\"mailNo\":\"A001705874494\",\"orderNo\":\"518061054080517801\",
+	//	\"time\":\"2018-06-12 12:01:01\",\"desc\":\"客户已签收\",\"city\":\"鄂尔多斯市\",\"facilityType\":\"1\",
+	//	\"facilityNo\":\"8884\",\"facilityName\":\"内蒙古_鄂尔多斯分拨站_伊金霍洛旗A点\",\"action\":\"SIGNED\",\"tz\":\"8\",
+	//	\"country\":\"China\",\"singer\":\"李慧芳\"}";
 	//	String clientFlagCustomer = "test";
 	//	String strSeed = "aafc04a1bacb487fa8d03f2a7bfdb555";
-	//	String myVerifyData = ReVerifyData.getVerifyDataByRdm(jsonData, verifyData.substring(0, 4), verifyData.substring(verifyData.length() - 4, verifyData.length()), clientFlagCustomer, strSeed);
+	//	String myVerifyData = ReVerifyData.getVerifyDataByRdm(jsonData, verifyData.substring(0, 4), verifyData
+	//	.substring(verifyData.length() - 4, verifyData.length()), clientFlagCustomer, strSeed);
 	//	//String myVerifyData = ReVerifyData.getVerifyDataByRdm(jsonData, "1111","1111", clientFlagCustomer, strSeed);
 	//	System.out.println(myVerifyData);
 	//}

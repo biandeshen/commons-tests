@@ -165,6 +165,7 @@ public class TimeUtils {
 	 *                     yyyy-MM-dd    2016-08-12
 	 *               yyyy-MM-dd HH:mm    2016-08-12 15:44
 	 *            yyyy-MM-dd HH:mm:ss    2016-08-12 15:44:40
+	 *        yyyy-MM-dd HH:mm:ss SSS    2016-08-12 15:44:40 686
 	 *       yyyy-MM-dd HH:mm:ss zzzz    2016-08-12 15:44:40 中国标准时间
 	 *  EEEE yyyy-MM-dd HH:mm:ss zzzz    星期五 2016-08-12 15:44:40 中国标准时间
 	 *       yyyy-MM-dd HH:mm:ss.SSSZ    2016-08-12 15:44:40.461+0800

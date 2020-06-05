@@ -262,8 +262,7 @@ public class RestTemplateConfig {
 	/**
 	 * 自定义Factory扩展,重写以支持GET请求的带body支持
 	 */
-	public static final class HttpComponentsClientRestfulHttpRequestFactory extends
-	                                                                        HttpComponentsClientHttpRequestFactory {
+	public static final class HttpComponentsClientRestfulHttpRequestFactory extends HttpComponentsClientHttpRequestFactory {
 		@Override
 		protected HttpUriRequest createHttpUriRequest(HttpMethod httpMethod, URI uri) {
 			if (httpMethod == HttpMethod.GET) {

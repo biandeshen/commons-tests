@@ -1,0 +1,139 @@
+<% 
+    def getProductItems = {
+        if (it.product_items != null) {
+            return '商品号:' + it.product_items.product_id + ',商品名称:' + it.product_items.product_id + ',商品单价:' + it.product_items.product_price + ',小计:' + it.product_items.product_total
+        }
+    }
+
+    def getEt = {
+        def b = new java.lang.StringBuffer("[")
+        if (it.expensive_items != null) {
+            for (def a : it.expensive_items) {
+                b.append("{").append("'packageNo': '$a.sub_order_id',").append("'packageWeight': '$a.goods_weight'").append("},")
+            }
+        }
+        b.append("]")
+        def s = b.toString().replace("},]", "}]")
+        if ("[]".equals(s)) {
+            return null
+        }
+        return s
+    }
+
+    def getShipmentType = {
+        if (it.shipment_type == null) {
+            return '普通配送'
+        }
+        switch (it.shipment_type) {
+            case "1": return '普通配送'
+            case "2": return 'EMS'
+            case "3": return '平邮'
+            case "5": return '加急配送'
+            case "101": return '当日递'
+            case "11": return '上门自提'
+            case "12": return '快递公司送货'
+            case "7": return '4小时递'
+            case "13": return '晚间送'
+            case "17": return '国际快递'
+            case "18": return '预约送货'
+            case "19": return '大件配送'
+            default: return '一般运单'
+        }
+    }
+
+    def getClientType = {
+        if (it.client_type == null) {
+            return '一般运单'
+        }
+        switch (it.client_type) {
+            case "1": return '一般运单'
+            case "2": return '顾客邮寄换货运单'
+            case "3": return '顾客邮寄换货运单'
+            case "4": return '顾客上门换货运单'
+            default: return '一般运单'
+        }
+    }
+
+    def getcodFlag = {
+        try {
+            if (Double.valueOf(it.should_receive_payment) > 0) {
+                return 1
+            } else {
+                return 0
+            }
+        } catch (Exception e) {
+            return 1
+        }
+    }
+
+    def getpayMode = {
+        if (it.pay_way != null) {
+            return 4
+        }
+        switch (it.pay_way) {
+            case "1": return 1
+            case "2": return 1
+            case "3": return 2
+            case "4": return 1
+            case "5": return 3
+            case "9": return 4
+            default: return 4
+        }
+    }
+
+    def getbusType = {
+        if (it.client_order_type != null) {
+            return 1
+        }
+        switch (it.client_order_type) {
+            case "1": return 1
+            case "2": return 3
+            case "3": return 2
+            case "4": return 3
+            default: return 1
+        }
+    }
+    
+    def sb = new StringBuffer('[')
+        for (def d : new groovy.json.JsonSlurper().parseText(data)) {
+            sb.append('{"clientFlag": "aa",')
+            sb.append('"mailNo": "').append(d.mapping_tracking_number).append('",')
+            sb.append('"orderNo": "').append(d.order_id).append('",')
+            sb.append('"dataFlag": "').append(d.express_id).append('",')
+            sb.append('"serviceAgent": "').append(d.client_order_type).append('",')
+            sb.append('"codAmount": "').append(d.should_receive_payment).append('",')
+            sb.append('"goodsNum": "').append(d.package_num).append('",')
+            sb.append('"goodsWeight": "').append(d.goods_weight).append('",')
+            sb.append('"sendName": "').append(d.sender_name).append('",')
+            sb.append('"sendMobile": "').append(d.sender_mobile_tel).append('",')
+            sb.append('"sendPhone": "').append(d.sender_fix_tel).append('",')
+            sb.append('"sendPro": "').append(d.sender_province).append('",')
+            sb.append('"sendCity": "').append(d.sender_city).append('",')
+            sb.append('"sendDistrict": "').append(d.sender_town).append('",')
+            sb.append('"sendAddress": "').append(d.sender_address).append('",')
+            sb.append('"receiveName": "').append(d.rcv_name).append('",')
+            sb.append('"receiveMobile": "').append(d.rcv_mobile_tel).append('",')
+            sb.append('"receivePhone": "').append(d.rcv_fix_tel).append('",')
+            sb.append('"receivePro": "').append(d.rcv_province).append('",')
+            sb.append('"receiveCity": "').append(d.rcv_city).append('",')
+            sb.append('"receiveDistrict": "').append(d.rcv_town).append('",')
+            sb.append('"receiveAddress": "').append(d.rcv_address).append('",')
+            sb.append('"busType": "').append(getbusType(d)).append('",')
+            sb.append('"payMode": "').append(getpayMode(d)).append('",')
+            sb.append('"codFlag": "').append(getcodFlag(d)).append('",')
+            sb.append('"extendedInfo":{"remark":')
+            sb.append('"发货时间:').append(d.send_date).append(',下单时间:').append(d.order_date).append(',发货库房:').append(d.warehouse).append(',货款:').append(d.goods_payment).append(',送货时间:').append(d.best_arrive_date).append(',包装大小:').append(d.package_size).append(',顾客是否VIP:').append(d.customer_type).append(',应退款:').append(d.should_refund_payment).append(',原单号:').append(d.origin_order_id).append(',退货原因:').append(d.refund_reason).append(',自提点名称:').append(d.self_service_name).append(',自提点电话:').append(d.self_service_tel).append(',自提点地址:').append(d.self_service_address).append(',封签号:').append(d.cover_code).append(',')
+            sb.append('运单来源:').append(getClientType(d)).append(',')
+            sb.append('配送方式:').append(getShipmentType(d)).append(',')
+            sb.append(getProductItems(d))
+            sb.append('"},')
+            sb.append('"orderPackages":').append(getEt(d)).append(',')
+            sb.append('"remarks": "').append(d.cust_message).append('"')
+            sb.append('},')
+        } 
+        def datas= sb.toString()
+        int i =  datas.length() 
+	    datas = datas.substring(0,datas.length()-1)+']'  
+    
+%> 
+<%=datas%>

@@ -1,0 +1,16 @@
+     <%  
+       String s='';
+    try {
+           
+            String data = request_time + express_id + userVerifyData;
+            String md5key = org.springframework.util.DigestUtils.md5DigestAsHex(data.getBytes("UTF-8"));
+            if (!md5key.equals(token)) {
+                s = '1'
+            } else {
+               s = '0'
+            }
+        } catch (Exception e) {
+           s = '4'
+        }
+    %>    
+    <%=s%>

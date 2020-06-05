@@ -72,7 +72,7 @@ public class TestOrderStatusQuery {
 		// (测试密钥: aafc04a1bacb487fa8d03f2a7bfdb555) + 常量值(z宅J急S送g) +四位随机数
 		// 2. md5加密上面拼接的字符串,获取 长度 32位 的 校验码
 		String url = "http://businesstest.zjs.com.cn:9200/interface/iwc/querystatustest";
-		String data = "{\"clientFlag\": \"test\",\"orders\": [{\"mailNo\": \"A602908107966\"}]}";
+		String data = "{\"clientFlag\": \"test\",\"orders\": [{\"mailNo\": \"A602910212646\"}]}";
 		System.out.println("data = " + data);
 		String verifyData = GetVerifyDataByrdm(data, "1111", "1111", "test", "aafc04a1bacb487fa8d03f2a7bfdb555");
 		System.out.println("verifyData = " + verifyData);
