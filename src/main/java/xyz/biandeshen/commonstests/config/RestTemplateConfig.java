@@ -45,8 +45,8 @@ import java.util.List;
  * @Description: RestTemplage注册类, 实现支持Http, Https请求接口
  * @date 2019/5/2314:54
  */
-@Configuration
-@SuppressWarnings("all")
+//@Configuration
+//@SuppressWarnings("all")
 public class RestTemplateConfig {
 	/**
 	 * 连接池的最大连接数默认为200

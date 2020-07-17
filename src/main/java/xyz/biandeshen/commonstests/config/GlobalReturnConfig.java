@@ -1,14 +1,13 @@
-package com.zjs.edistorage.config;
+package xyz.biandeshen.commonstests.config;
 
-import com.zjs.edistorage.config.GlobalException.GlobalResult;
-import com.zjs.edistorage.entity.response.CommonResponseEntity;
-import com.zjs.edistorage.utils.common.UnicodeBackslashUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import xyz.biandeshen.commonstests.config.GlobalException.GlobalResult;
+import xyz.biandeshen.commonstests.util.common.UnicodeBackslashUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,13 +21,13 @@ import java.time.Instant;
  * @Description: 全局返回值、全局异常统一封装
  * @date 2019/11/18 8:59
  */
-@Configuration
+//@Configuration
 @SuppressWarnings("all")
 public class GlobalReturnConfig {
 	/**
 	 * 统一异常处理（默认json格式）
 	 */
-	@RestControllerAdvice
+	//@RestControllerAdvice
 	static class GlobalExceptionResponseHandler {
 		private static Logger logger = LoggerFactory.getLogger(GlobalExceptionResponseHandler.class);
 		

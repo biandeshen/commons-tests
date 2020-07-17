@@ -24,7 +24,7 @@ public class TestFendanQuery {
 		//String data="{\"clientFlag\": \"客户标识\",\"orders\": [{\"mailNo\": \"A602912931905\"}]}";
 		//String data = "{\"clientFlag\": \"test\",\"orders\": [{\"mailNo\": \"A602908107966\"}]}";
 		//String data = "[{\"orderNo\":\"121508\",\"address\":\"黑龙江省鹤岗市向阳区二马路龙江省煤营销分公司鹤岗公司\" }]";
-		String data = "[{\"orderNo\":\"DH322019041817021620271\",\"address\":" + "\"上海上海市长宁区新泾镇北虹路1185弄\"}]";
+		String data = "[{\"orderNo\":\"DH322019041817021620271\",\"address\":" + "\"安徽省马鞍山市雨山区城区马鞍山市雨山六村23栋207室\"}]";
 		//String data="{\"clientFlag\": \"DianXin_HN\",\"orders\": [{\"mailNo\": \"A005548987905\"}]}";
 		
 		//data="{\"clientFlag\": \"客户标识\",\"orders\": [{\"mailNo\": \"A001417704024\"},{\"mailNo\":

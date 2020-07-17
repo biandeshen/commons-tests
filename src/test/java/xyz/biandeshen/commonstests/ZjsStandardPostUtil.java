@@ -17,9 +17,12 @@ public class ZjsStandardPostUtil {
 	public static String zjsStandardPost(String jsonData, String url, String clientFlag, String verifyData) {
 		
 		MultiValueMap<String, Object> postParameters = new LinkedMultiValueMap<>();
-		postParameters.add("clientFlag", clientFlag);
-		postParameters.add("verifyData", verifyData);
-		postParameters.add("data", jsonData);
+		//postParameters.add("clientFlag", clientFlag);
+		//postParameters.add("verifyData", verifyData);
+		//postParameters.add("data", jsonData);
+		postParameters.add("age", 12);
+		postParameters.add("name", "test");
+		postParameters.add("info", "infoclass");
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/x-www-form-urlencoded");
 		HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(postParameters, headers);
@@ -39,4 +42,10 @@ public class ZjsStandardPostUtil {
 	//		String mm = zjsStandardPost(jsonData, url, "test", "aafc04a1bacb487fa8d03f2a7bfdb555");
 	//		System.out.println(mm);
 	//	}
+		public static void main(String[] args) {
+			String url = "http://10.10.12.109:8081/user7";
+			String mm = zjsStandardPost(null, url, "test", "aafc04a1bacb487fa8d03f2a7bfdb555");
+			System.out.println(mm);
+		}
+	
 }

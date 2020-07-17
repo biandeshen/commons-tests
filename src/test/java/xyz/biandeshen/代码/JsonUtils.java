@@ -1,6 +1,8 @@
-package xyz.biandeshen.代码;
+package com.cn.zjs.guangda.utils;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -41,9 +43,9 @@ public class JsonUtils {
 	/**
 	 * jackson
 	 */
-	private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 	
-	public static ObjectMapper getInstance() {
+	private static ObjectMapper getInstance() {
 		return OBJECT_MAPPER;
 	}
 	
@@ -176,8 +178,7 @@ public class JsonUtils {
 	 * @author fjp
 	 * @date 2018/12/13 15:34
 	 */
-	public static String objectToJsonStrImpl(Object obj) throws IllegalAccessException,
-	                                                            IntrospectionException,
+	public static String objectToJsonStrImpl(Object obj) throws IllegalAccessException, IntrospectionException,
 	                                                            InvocationTargetException {
 		StringBuilder json = new StringBuilder();
 		if (obj == null) {
@@ -258,8 +259,7 @@ public class JsonUtils {
 	 * @author fjp
 	 * @date 2018/12/13 15:34
 	 */
-	public static String objectToJsonIgnoreNullJackSonImpl(Object obj) throws
-	                                                                   JsonProcessingException {
+	public static String objectToJsonIgnoreNullJackSonImpl(Object obj) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		return mapper.writeValueAsString(obj);
@@ -355,10 +355,8 @@ public class JsonUtils {
 	 * @author fjp
 	 * @date 2018/12/13 15:56
 	 */
-	public static String beanToJsonStrImpl(Object bean) throws
-	                                                    IntrospectionException,
-	                                                    InvocationTargetException,
-	                                                    IllegalAccessException {
+	public static String beanToJsonStrImpl(Object bean) throws IntrospectionException, InvocationTargetException,
+	                                                           IllegalAccessException {
 		StringBuilder json = new StringBuilder();
 		json.append("{");
 		PropertyDescriptor[] props = null;
@@ -413,10 +411,8 @@ public class JsonUtils {
 	 * @author fjp
 	 * @date 2018/12/13 16:53
 	 */
-	public static String listToJsonStrImpl(List<?> list) throws
-	                                                     IllegalAccessException,
-	                                                     IntrospectionException,
-	                                                     InvocationTargetException {
+	public static String listToJsonStrImpl(List<?> list) throws IllegalAccessException, IntrospectionException,
+	                                                            InvocationTargetException {
 		StringBuilder json = new StringBuilder();
 		json.append("[");
 		if (list != null && list.size() > 0) {
@@ -465,10 +461,8 @@ public class JsonUtils {
 	 * @author fjp
 	 * @date 2018/12/13 16:53
 	 */
-	public static String arrayToJsonStrImpl(Object[] array) throws
-	                                                        IllegalAccessException,
-	                                                        IntrospectionException,
-	                                                        InvocationTargetException {
+	public static String arrayToJsonStrImpl(Object[] array) throws IllegalAccessException, IntrospectionException,
+	                                                               InvocationTargetException {
 		StringBuilder json = new StringBuilder();
 		json.append("[");
 		if (array != null && array.length > 0) {
@@ -516,8 +510,7 @@ public class JsonUtils {
 	 * @author fjp
 	 * @date 2018/12/13 16:53
 	 */
-	public static String setToJsonStrImpl(Set<?> set) throws IllegalAccessException,
-	                                                         IntrospectionException,
+	public static String setToJsonStrImpl(Set<?> set) throws IllegalAccessException, IntrospectionException,
 	                                                         InvocationTargetException {
 		StringBuilder json = new StringBuilder();
 		json.append("[");
@@ -566,8 +559,7 @@ public class JsonUtils {
 	 * @author fjp
 	 * @date 2018/12/13 16:53
 	 */
-	public static String mapToJsonStrImpl(Map<?, ?> map) throws IllegalAccessException,
-	                                                            IntrospectionException,
+	public static String mapToJsonStrImpl(Map<?, ?> map) throws IllegalAccessException, IntrospectionException,
 	                                                            InvocationTargetException {
 		StringBuilder json = new StringBuilder();
 		json.append("{");
@@ -625,7 +617,7 @@ public class JsonUtils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "";
+		return null;
 	}
 	
 	/**
@@ -665,8 +657,7 @@ public class JsonUtils {
 	 */
 	public static <T> Map<String, T> parseJsonToMapGsonImpl(String json) {
 		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-		Type type = new TypeToken<HashMap<String, T>>() {
-		}.getType();
+		Type type = new TypeToken<HashMap<String, T>>() {}.getType();
 		return gson.<HashMap<String, T>>fromJson(json, type);
 	}
 	
@@ -708,11 +699,8 @@ public class JsonUtils {
 	 * @date 2018/12/13 16:53
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Map<String, T> parseJsonToMapJackSonImpl(String json, Class<T> clazz) throws
-	                                                                                        Exception {
-		Map<String, Map<String, T>> map = OBJECT_MAPPER.readValue(json,
-		                                                          new TypeReference<Map<String, T>>() {
-		});
+	public static <T> Map<String, T> parseJsonToMapJackSonImpl(String json, Class<T> clazz) throws Exception {
+		Map<String, Map<String, T>> map = OBJECT_MAPPER.readValue(json, new TypeReference<Map<String, T>>() {});
 		Map<String, T> result = new HashMap<>();
 		for (Entry<String, Map<String, T>> entry : map.entrySet()) {
 			result.put(entry.getKey(), object2BeanJackSonImpl(entry.getValue(), clazz));
@@ -735,8 +723,7 @@ public class JsonUtils {
 	 * @date 2018/12/14 10:07
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Map<String, T> parseJsonToMapDeepleyJackSonImpl(String json) throws
-	                                                                               Exception {
+	public static <T> Map<String, T> parseJsonToMapDeepleyJackSonImpl(String json) throws Exception {
 		return (Map<String, T>) parseJsonToMapRecursionJackSonImpl(json, OBJECT_MAPPER);
 	}
 	
@@ -751,10 +738,7 @@ public class JsonUtils {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	private static <T> Map<String, Object> parseJsonToMapRecursionJackSonImpl(
-			String json,
-			ObjectMapper mapper
-	) throws Exception {
+	private static <T> Map<String, Object> parseJsonToMapRecursionJackSonImpl(String json, ObjectMapper mapper) throws Exception {
 		if (json == null) {
 			return null;
 		}
@@ -769,8 +753,7 @@ public class JsonUtils {
 					List<T> list = parseJsonToListRecursionJackSonImpl(str, mapper);
 					map.put(entry.getKey(), list);
 				} else if (str.startsWith("{")) {
-					Map<String, Object> mapRecursion = parseJsonToMapRecursionJackSonImpl(str,
-					                                                                      mapper);
+					Map<String, Object> mapRecursion = parseJsonToMapRecursionJackSonImpl(str, mapper);
 					map.put(entry.getKey(), mapRecursion);
 				}
 			}
@@ -787,8 +770,7 @@ public class JsonUtils {
 		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 		List<T> list = null;
 		try {
-			Type type = new TypeToken<List<T>>() {
-			}.getType();
+			Type type = new TypeToken<List<T>>() {}.getType();
 			list = gson.fromJson(json, type);
 		} catch (Exception e) {
 		
@@ -799,8 +781,7 @@ public class JsonUtils {
 	/**
 	 * 与javaBean json数组字符串转换为list
 	 */
-	public static <T> List<T> parseJsonToListJackSonImpl(String jsonArrayStr, Class<T> clazz) throws
-	                                                                                          Exception {
+	public static <T> List<T> parseJsonToListJackSonImpl(String jsonArrayStr, Class<T> clazz) throws Exception {
 		JavaType javaType = getCollectionType(ArrayList.class, clazz);
 		return OBJECT_MAPPER.readValue(jsonArrayStr, javaType);
 	}
@@ -817,9 +798,7 @@ public class JsonUtils {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchedked")
-	private static <T> List<T> parseJsonToListRecursionJackSonImpl(String json,
-	                                                               ObjectMapper mapper) throws
-	                                                                                                 Exception {
+	private static <T> List<T> parseJsonToListRecursionJackSonImpl(String json, ObjectMapper mapper) throws Exception {
 		if (json == null) {
 			return null;
 		}
@@ -850,10 +829,8 @@ public class JsonUtils {
 	 *
 	 * @return JavaType Java类型
 	 */
-	public static JavaType getCollectionType(Class<?> collectionClass,
-	                                         Class<?>... elementClasses) {
-		return OBJECT_MAPPER.getTypeFactory().constructParametricType(collectionClass,
-		                                                              elementClasses);
+	public static JavaType getCollectionType(Class<?> collectionClass, Class<?>... elementClasses) {
+		return OBJECT_MAPPER.getTypeFactory().constructParametricType(collectionClass, elementClasses);
 	}
 	
 	/**
@@ -891,7 +868,8 @@ public class JsonUtils {
 			//通过HTTP获取JSON数据
 			StringBuilder sb;
 			try (InputStream in = new URL(url).openStream(); BufferedReader reader =
-					                                                 new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+					                                                 new BufferedReader(new InputStreamReader(in,
+					                                                                                          StandardCharsets.UTF_8))) {
 				sb = new StringBuilder();
 				String line;
 				while ((line = reader.readLine()) != null) {
@@ -913,7 +891,8 @@ public class JsonUtils {
 			//通过HTTP获取JSON数据
 			StringBuilder sb;
 			try (InputStream in = new URL(url).openStream(); BufferedReader reader =
-					                                                 new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+					                                                 new BufferedReader(new InputStreamReader(in,
+					                                                                                          StandardCharsets.UTF_8))) {
 				sb = new StringBuilder();
 				String line;
 				while ((line = reader.readLine()) != null) {
@@ -948,39 +927,97 @@ public class JsonUtils {
 		return OBJECT_MAPPER.convertValue(object, clazz);
 	}
 	
-	/**
-	 * <big><i>XML转JSONObject</i></big>
-	 *
-	 * @param xmlstr
-	 * 		<strong>xmlstr</strong>
-	 *
-	 * @return <strong>String</strong>
-	 *
-	 * @throws <strong><i>
-	 * 		</i></strong>
-	 * @Description:
-	 * @author fjp
-	 * @date 2018/12/20 9:12
-	 */
-	public static String parseXml2Json(String xmlstr) {
-		return XML.toJSONObject(xmlstr).toString();
-	}
+	///**
+	// * <big><i>XML转JSONObject</i></big>
+	// *
+	// * @param xmlstr
+	// * 		<strong>xmlstr</strong>
+	// *
+	// * @return <strong>String</strong>
+	// *
+	// * @throws <strong><i>
+	// * 		</i></strong>
+	// * @Description:
+	// * @author fjp
+	// * @date 2018/12/20 9:12
+	// */
+	//public static String parseXml2Json(String xmlstr) {
+	//	return XML.toJSONObject(xmlstr).toString();
+	//}
+	//
+	///**
+	// * <big><i>JSONObject转XML</i></big>
+	// *
+	// * @param jsonstr
+	// * 		<strong>jsonstr</strong>
+	// *
+	// * @return <strong>String</strong>
+	// *
+	// * @throws <strong><i>
+	// * 		</i></strong>
+	// * @Description:
+	// * @author fjp
+	// * @date 2018/12/20 9:12
+	// */
+	//public static String parseJson2Xml(String jsonstr) {
+	//
+	//	return XML.toString(jsonstr);
+	//}
 	
 	/**
-	 * <big><i>JSONObject转XML</i></big>
+	 * Json to xml string.
 	 *
-	 * @param jsonstr
-	 * 		<strong>jsonstr</strong>
+	 * @param json
+	 * 		the json
 	 *
-	 * @return <strong>String</strong>
-	 *
-	 * @throws <strong><i>
-	 * 		</i></strong>
-	 * @Description:
-	 * @author fjp
-	 * @date 2018/12/20 9:12
+	 * @return the string
 	 */
-	public static String parseJson2Xml(String jsonstr) {
-		return XML.toString(jsonstr);
+	public static String jsonToXml(String json) {
+		try {
+			StringBuffer buffer = new StringBuffer();
+			buffer.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+			com.alibaba.fastjson.JSONObject jObj = JSON.parseObject(json);
+			jsonToXmlstr(jObj, buffer);
+			return buffer.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
+	
+	/**
+	 * Json to xmlstr string.
+	 *
+	 * @param jObj
+	 * 		the j obj
+	 * @param buffer
+	 * 		the buffer
+	 *
+	 * @return the string
+	 */
+	public static String jsonToXmlstr(com.alibaba.fastjson.JSONObject jObj, StringBuffer buffer) {
+		Set<Map.Entry<String, Object>> se = jObj.entrySet();
+		for (Iterator<Map.Entry<String, Object>> it = se.iterator(); it.hasNext(); ) {
+			Map.Entry<String, Object> en = it.next();
+			if (com.alibaba.fastjson.JSONObject.class.isAssignableFrom(en.getValue().getClass())) {
+				buffer.append("<" + en.getKey() + ">");
+				com.alibaba.fastjson.JSONObject jo = jObj.getJSONObject(en.getKey());
+				jsonToXmlstr(jo, buffer);
+				buffer.append("</" + en.getKey() + ">");
+			} else if (com.alibaba.fastjson.JSONArray.class.isAssignableFrom(en.getValue().getClass())) {
+				JSONArray jarray = jObj.getJSONArray(en.getKey());
+				for (int i = 0; i < jarray.size(); i++) {
+					buffer.append("<" + en.getKey() + ">");
+					com.alibaba.fastjson.JSONObject jsonobject = jarray.getJSONObject(i);
+					jsonToXmlstr(jsonobject, buffer);
+					buffer.append("</" + en.getKey() + ">");
+				}
+			} else if (CharSequence.class.isAssignableFrom(en.getValue().getClass()) || Number.class.isAssignableFrom(en.getValue().getClass())) {
+				buffer.append("<" + en.getKey() + ">" + en.getValue());
+				buffer.append("</" + en.getKey() + ">");
+			}
+		}
+		return buffer.toString();
 	}
 }

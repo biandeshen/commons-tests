@@ -15,11 +15,11 @@ public class TestDanHaoChiAPI2 {
 	
 	public static void main(String[] args) {
 		String APP_ENCRYPT = "5f6befe7e27e4d73973c86ab347db8b3";
-		String json = "{\"clientId\":\"DH100580\",\"key\":\"5f6befe7e27e4d73973c86ab347db8b3\",\"applynum\":\"10\"}";
+		String json = "{\"clientId\":\"DH100621\",\"key\":\"5f6befe7e27e4d73973c86ab347db8b3\",\"applynum\":\"10\"}";
 		
 		RestTemplate rest = new RestTemplate();
 		ApplyRequire require = new ApplyRequire();
-		require.setClientid("DH100580");
+		require.setClientid("DH100621");
 		require.setApplynum(10);
 		require.setKey("5f6befe7e27e4d73973c86ab347db8b3");
 		
