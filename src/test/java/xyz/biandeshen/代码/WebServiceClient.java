@@ -117,9 +117,7 @@ public final class WebServiceClient {
 		
 		try {
 			String getRequestContentFromV2 =
-					WebServiceClient.sendData("http://businesstest" + ".zjs.com" + ".cn:8001" + "/edi/gdck/services" +
-							                          "/webService?wsdl", "getRequestContentFromV2", type, fromSYS,
-					                          fromSYSCode, requestTime, appKey, sign, requestContent);
+					WebServiceClient.sendData("http://businesstest" + ".zjs.com" + ".cn:8001" + "/edi/gdck/services" + "/webService?wsdl", "getRequestContentFromV2", type, fromSYS, fromSYSCode, requestTime, appKey, sign, requestContent);
 			System.out.println("getRequestContentFromV2 = " + getRequestContentFromV2);
 		} catch (Exception e) {
 			e.printStackTrace();
