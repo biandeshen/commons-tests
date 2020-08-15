@@ -18,6 +18,12 @@ import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * @author fjp
+ * @Title: WebServiceClient
+ * @Description: TODO
+ * @date 2020/8/15 19:02
+ */
 public final class WebServiceClient {
 	
 	private static final Logger log = LoggerFactory.getLogger(WebServiceClient.class);
@@ -110,11 +116,10 @@ public final class WebServiceClient {
 				                        + "<orderCode>201702131024024</orderCode>\n" + "            " + "<companyCode" + ">130</companyCode>\n" + "            <billTypeCode>OUT_SALES" + "</billTypeCode>\n" + "            <orderDate>2017-02-10 " + "10:13:31" + "</orderDate>\n" + "            <fromOrgName>-</fromOrgName>\n" + "   " + "   " + "      <fromContactName />\n" + "            <fromTelephone />\n" + "      " + "      <fromAddress />\n" + "            <toOrgName>小梅子</toOrgName>\n" + "    " + "        <toContactName>小梅子</toContactName>\n" + "            " + "<toTelephone>18691323068</toTelephone>\n" + "            <toAddress>陕西省 渭南市 " + "华阴市 051基地 卫生所</toAddress>\n" + "            <carrierCode>100001</carrierCode" + ">\n" + "            <finsuType>2064</finsuType>\n" + "            " + "<receiveAmount>0.00</receiveAmount>\n" + "            <declaredAmount>0" + ".00</declaredAmount>\n" + "            <premium>0.00</premium>\n" + "        " + "    <beReturn>N</beReturn>\n" + "            <orderTotalAmount>2057" + "</orderTotalAmount>\n" + "            <orderDiscount>-9.73</orderDiscount>\n" + "            <freight>10</freight>\n" + "            <shipWarehouseCode>BJDP001</shipWarehouseCode>\n" + "            <description />\n" + "            <invoiceType></invoiceType>\n" + "            <invoiceTitle>个人</invoiceTitle>\n" + "            <drawer>nubia</drawer>\n" + "            <postCode></postCode>\n" + "            <operTime>2017-02-13 10:13:31:823</operTime>\n" + "            <productDetail>\n" + "                <product>\n" + "                    <itemCode>127201903270003</itemCode>\n" + "                    <itemName>宅急送测试03</itemName>\n" + "                    <baseUnit>个</baseUnit>\n" + "                    <unitPrice>58</unitPrice>\n" + "                    <expectedQuantity>1</expectedQuantity>\n" + "                    <supplierCode />\n" + "                    <extendPropC1 />\n" + "                    <extendPropC2 />\n" + "                    <extendPropC3 />\n" + "                    <extendPropC4 />\n" + "                    <extendPropC5 />\n" + "                    <extendPropC6 />\n" + "                    <extendPropC7 />\n" + "                    <extendPropC8 />\n" + "                    <extendPropC9></extendPropC9>\n" + "                </product>\n" + "                <product>\n" + "                    <itemCode>127201903270004</itemCode>\n" + "                    <itemName>宅急送测试04</itemName>\n" + "                    <baseUnit>个</baseUnit>\n" + "                    <unitPrice>1999</unitPrice>\n" + "                    <expectedQuantity>1</expectedQuantity>\n" + "                    <supplierCode />\n" + "                    <extendPropC1 />\n" + "                    <extendPropC2 />\n" + "                    <extendPropC3 />\n" + "                    <extendPropC4 />\n" + "                    <extendPropC5 />\n" + "                    <extendPropC6 />\n" + "                    <extendPropC7 />\n" + "                    <extendPropC8 />\n" + "                    <extendPropC9></extendPropC9>\n" + "                </product>\n" + "            </productDetail>\n" + "        </SalesOrderReceiving>\n" + "    </SalesOrderReceivings>\n" + "</root>";
 		
 		try {
-			String getRequestContentFromV2 = WebServiceClient.sendData("http://businesstest" + ".zjs.com" + ".cn:8001" +
-					                                                           "/edi/gdck/services/webService?wsdl",
-			                                                           "getRequestContentFromV2", type, fromSYS,
-			                                                           fromSYSCode, requestTime, appKey, sign,
-			                                                           requestContent);
+			String getRequestContentFromV2 =
+					WebServiceClient.sendData("http://businesstest" + ".zjs.com" + ".cn:8001" + "/edi/gdck/services" +
+							                          "/webService?wsdl", "getRequestContentFromV2", type, fromSYS,
+					                          fromSYSCode, requestTime, appKey, sign, requestContent);
 			System.out.println("getRequestContentFromV2 = " + getRequestContentFromV2);
 		} catch (Exception e) {
 			e.printStackTrace();
