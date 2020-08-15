@@ -63,6 +63,7 @@ public class SwaggerConfig {
 	@Configuration
 	@EnableWebMvc
 	@Profile("dev")
+			//WebMvcConfigurerAdapter || WebMvcConfigurationSupport 异常时切换实现
 	class WebMVCConfig extends WebMvcConfigurerAdapter implements WebMvcConfigurer {
 		
 		private CorsConfiguration buildConfig() {
@@ -86,7 +87,8 @@ public class SwaggerConfig {
 		public void addResourceHandlers(ResourceHandlerRegistry registry) {
 			registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
 			registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-			
+			registry.addResourceHandler("/favicon.ico").addResourceLocations("classpath:/META-INF/resources/favicon" +
+					                                                                 ".ico");
 		}
 		
 	}
